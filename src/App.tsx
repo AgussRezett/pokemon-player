@@ -1,8 +1,17 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import EpisodeList from './components/pages/EpisodeList';
+import EpisodePlayer from './components/pages/EpisodePlayer';
 
-const App = () => {
+
+function App() {
   return (
-    <div>App</div>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<EpisodeList />} />
+        <Route path="/episode/:code" element={<EpisodePlayer />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
