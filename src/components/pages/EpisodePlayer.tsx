@@ -102,7 +102,21 @@ export default function EpisodePlayer() {
                     }}>
                         {episode.isCanon ? '📖 Historia' : '🔄 Relleno'}
                     </div>
-
+                    {episode.isCensored && (
+                        <div style={{
+                            backgroundColor: '#f8d7da',
+                            color: '#721c24',
+                            padding: '8px 16px',
+                            borderRadius: '20px',
+                            fontSize: '14px',
+                            fontWeight: 'bold',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '6px'
+                        }}>
+                            🚫 Censurado
+                        </div>
+                    )}
                     {watched && (
                         <div style={{
                             backgroundColor: '#28a745',
@@ -121,7 +135,7 @@ export default function EpisodePlayer() {
                 </div>
             </div>
 
-            <h1 style={{ color: "#ffffff", marginBottom: '10px' }}>
+            <h1 style={{ color: "#000000", marginBottom: '10px' }}>
                 {String(episode.season).padStart(2, '0')}X{String(episode.episode).padStart(2, '0')} - {' '}
                 <span style={{ textTransform: 'capitalize' }}>{episode.name}</span>
             </h1>
@@ -182,6 +196,20 @@ export default function EpisodePlayer() {
                         {episode.isCanon ? '📖 Historia (Canon)' : '🔄 Relleno (Filler)'}
                     </span>
                 </p>
+                {episode.isCensored && (
+                    <>
+                        {' '}
+                        <span style={{
+                            padding: '4px 8px',
+                            borderRadius: '4px',
+                            backgroundColor: '#f8d7da',
+                            color: '#721c24',
+                            fontWeight: 'bold'
+                        }}>
+                            🚫 Censurado
+                        </span>
+                    </>
+                )}
                 <p>
                     <strong>Estado:</strong> {' '}
                     {watched ? (

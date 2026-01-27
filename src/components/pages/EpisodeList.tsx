@@ -198,6 +198,18 @@ export default function EpisodeList() {
                                                 }}>
                                                     {episode.isCanon ? '📖 Historia' : '🔄 Relleno'}
                                                 </span>
+                                                {episode.isCensored && (
+                                                    <span style={{
+                                                        fontSize: '11px',
+                                                        padding: '2px 6px',
+                                                        borderRadius: '4px',
+                                                        backgroundColor: '#f8d7da',
+                                                        color: '#721c24',
+                                                        fontWeight: 'bold'
+                                                    }}>
+                                                        🚫 Censurado
+                                                    </span>
+                                                )}
                                                 {' - '}
                                                 <span style={{ textTransform: 'capitalize' }}>{episode.name}</span>
                                             </div>

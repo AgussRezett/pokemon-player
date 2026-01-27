@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import EPISODES_JSON from '../data/urls.json';
-import { CANON_EPISODES_STRING, NON_CANON_EPISODES_STRING, parseEpisodes } from '../utils/canon';
+import { CANON_EPISODES_STRING, NON_CANON_EPISODES_STRING, CENSORED_EPISODES, parseEpisodes } from '../utils/canon';
 
 const WATCHED_EPISODES_KEY = 'pokemon_watched_episodes';
 
@@ -12,6 +12,7 @@ interface Episode {
   name: string;
   url: string;
   isCanon: boolean;
+  isCensored: boolean; // NUEVO
 }
 
 interface EpisodeStore {
@@ -21,7 +22,7 @@ interface EpisodeStore {
   watchedEpisodes: Set<string>;
   fetchEpisodes: () => Promise<void>;
   getEpisodeByCode: (code: string) => Episode | undefined;
-  getEpisodeBySeasonAndNumber: (season: number, episode: number) => Episode | undefined; // NUEVO
+  getEpisodeBySeasonAndNumber: (season: number, episode: number) => Episode | undefined;
   markAsWatched: (code: string) => void;
   isWatched: (code: string) => boolean;
   clearCache: () => void;
@@ -53,7 +54,8 @@ const parseEpisodeUrl = (url: string, index: number, allUrls: string[]): Episode
       absoluteEpisode: 0,
       name: cleanName(name),
       url,
-      isCanon: false
+      isCanon: false,
+      isCensored: false // NUEVO
     };
   }
   
@@ -81,7 +83,8 @@ const parseEpisodeUrl = (url: string, index: number, allUrls: string[]): Episode
       absoluteEpisode: 0,
       name,
       url,
-      isCanon: false
+      isCanon: false,
+      isCensored: false // NUEVO
     };
   }
   
@@ -121,6 +124,7 @@ const saveWatchedEpisodes = (watchedEpisodes: Set<string>) => {
 const assignAbsoluteNumbersAndCanon = (episodes: Episode[]): Episode[] => {
   const canonEpisodes = new Set(parseEpisodes(CANON_EPISODES_STRING));
   const nonCanonEpisodes = new Set(parseEpisodes(NON_CANON_EPISODES_STRING));
+  const censoredEpisodes = new Set(parseEpisodes(CENSORED_EPISODES)); // NUEVO
   
   return episodes.map((episode, index) => {
     const absoluteEpisode = index + 1;
@@ -133,10 +137,14 @@ const assignAbsoluteNumbersAndCanon = (episodes: Episode[]): Episode[] => {
       isCanon = false;
     }
     
+    // NUEVO: Verificar si está censurado
+    const isCensored = censoredEpisodes.has(absoluteEpisode);
+    
     return {
       ...episode,
       absoluteEpisode,
-      isCanon
+      isCanon,
+      isCensored // NUEVO
     };
   });
 };
@@ -165,6 +173,7 @@ export const useEpisodeStore = create<EpisodeStore>((set, get) => ({
       console.log(`Total de episodios parseados: ${parsedEpisodes.length} de ${urls.length} URLs`);
       console.log(`Episodios canon: ${parsedEpisodes.filter(ep => ep.isCanon).length}`);
       console.log(`Episodios relleno: ${parsedEpisodes.filter(ep => !ep.isCanon).length}`);
+      console.log(`Episodios censurados: ${parsedEpisodes.filter(ep => ep.isCensored).length}`); // NUEVO
       
       set({ episodes: parsedEpisodes, loading: false });
     } catch (error) {
@@ -179,7 +188,6 @@ export const useEpisodeStore = create<EpisodeStore>((set, get) => ({
     return get().episodes.find(ep => ep.code === code);
   },
   
-  // NUEVO MÉTODO
   getEpisodeBySeasonAndNumber: (season: number, episode: number) => {
     return get().episodes.find(ep => ep.season === season && ep.episode === episode);
   },
