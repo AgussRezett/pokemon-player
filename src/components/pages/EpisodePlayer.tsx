@@ -3,12 +3,18 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useEpisodeStore } from '../../store/episodeStore';
 
 export default function EpisodePlayer() {
-    const { code } = useParams<{ code: string }>();
+    const { season: seasonParam, episode: episodeParam } = useParams<{ season: string; episode: string }>();
     const navigate = useNavigate();
-    const { episodes, fetchEpisodes, getEpisodeByCode, markAsWatched, isWatched } = useEpisodeStore();
+    const { episodes, fetchEpisodes, getEpisodeBySeasonAndNumber, markAsWatched, isWatched } = useEpisodeStore();
 
-    const episode = code ? getEpisodeByCode(code) : null;
-    const watched = code ? isWatched(code) : false;
+    const season = seasonParam ? parseInt(seasonParam, 10) : null;
+    const episodeNum = episodeParam ? parseInt(episodeParam, 10) : null;
+
+    const episode = season !== null && episodeNum !== null
+        ? getEpisodeBySeasonAndNumber(season, episodeNum)
+        : null;
+
+    const watched = episode ? isWatched(episode.code) : false;
 
     useEffect(() => {
         // Asegurarnos de que los episodios estén cargados
@@ -19,19 +25,19 @@ export default function EpisodePlayer() {
 
     // Marcar como visto después de 10 segundos
     useEffect(() => {
-        if (code && !watched) {
+        if (episode && !watched) {
             const timer = setTimeout(() => {
-                markAsWatched(code);
+                markAsWatched(episode.code);
             }, 10000); // 10 segundos
 
             return () => clearTimeout(timer);
         }
-    }, [code, watched, markAsWatched]);
+    }, [episode, watched, markAsWatched]);
 
     // Encontrar episodio anterior y siguiente
-    const currentIndex = episodes.findIndex(ep => ep.code === code);
+    const currentIndex = episode ? episodes.findIndex(ep => ep.code === episode.code) : -1;
     const previousEpisode = currentIndex > 0 ? episodes[currentIndex - 1] : null;
-    const nextEpisode = currentIndex < episodes.length - 1 ? episodes[currentIndex + 1] : null;
+    const nextEpisode = currentIndex >= 0 && currentIndex < episodes.length - 1 ? episodes[currentIndex + 1] : null;
 
     if (episodes.length === 0) {
         return (
@@ -47,7 +53,7 @@ export default function EpisodePlayer() {
             <div style={{ padding: '20px' }}>
                 <Link to="/">← Volver al listado</Link>
                 <h1>Error</h1>
-                <p>No se encontró el episodio</p>
+                <p>No se encontró el episodio (Temporada {season}, Episodio {episodeNum})</p>
             </div>
         );
     }
@@ -174,7 +180,7 @@ export default function EpisodePlayer() {
                 marginTop: '20px'
             }}>
                 <button
-                    onClick={() => previousEpisode && navigate(`/episode/${previousEpisode.code}`)}
+                    onClick={() => previousEpisode && navigate(`/episode/${previousEpisode.season}/${previousEpisode.episode}`)}
                     disabled={!previousEpisode}
                     style={{
                         padding: '10px 20px',
@@ -200,7 +206,7 @@ export default function EpisodePlayer() {
                 </button>
 
                 <button
-                    onClick={() => nextEpisode && navigate(`/episode/${nextEpisode.code}`)}
+                    onClick={() => nextEpisode && navigate(`/episode/${nextEpisode.season}/${nextEpisode.episode}`)}
                     disabled={!nextEpisode}
                     style={{
                         padding: '10px 20px',

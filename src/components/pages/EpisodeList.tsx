@@ -131,7 +131,7 @@ export default function EpisodeList() {
                                 return (
                                     <Link
                                         key={episode.code}
-                                        to={`/episode/${episode.code}`}
+                                        to={`/episode/${episode.season}/${episode.episode}`}
                                         style={{
                                             padding: '15px',
                                             border: watched ? '2px solid #28a745' : '1px solid #ccc',

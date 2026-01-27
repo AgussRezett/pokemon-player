@@ -8,7 +8,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<EpisodeList />} />
-        <Route path="/episode/:code" element={<EpisodePlayer />} />
+        <Route path="/episode/:season/:episode" element={<EpisodePlayer />} />
       </Routes>
     </BrowserRouter>
   );
