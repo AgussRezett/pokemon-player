@@ -23,6 +23,26 @@ export default function EpisodePlayer() {
         }
     }, [episodes.length, fetchEpisodes]);
 
+    // NUEVO: Cambiar el título del documento
+    useEffect(() => {
+        if (episode) {
+            // Capitalizar el nombre del episodio
+            const capitalizedName = episode.name
+                .split(' ')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                .join(' ');
+
+            document.title = `Temporada ${episode.season} Capítulo ${episode.episode}: ${capitalizedName} | Pokémon`;
+        } else {
+            document.title = 'Pokémon';
+        }
+
+        // Cleanup: restaurar el título cuando se desmonte el componente
+        return () => {
+            document.title = 'Pokémon';
+        };
+    }, [episode]);
+
     // Marcar como visto después de 10 segundos
     useEffect(() => {
         if (episode && !watched) {

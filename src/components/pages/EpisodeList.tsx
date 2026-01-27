@@ -10,6 +10,15 @@ export default function EpisodeList() {
         fetchEpisodes();
     }, [fetchEpisodes]);
 
+    // NUEVO: Establecer título para la lista
+    useEffect(() => {
+        document.title = 'Listado de Episodios | Pokémon';
+
+        return () => {
+            document.title = 'Pokémon';
+        };
+    }, []);
+
     // Agrupar por temporada
     const episodesBySeason = episodes.reduce((acc, episode) => {
         if (!acc[episode.season]) {
