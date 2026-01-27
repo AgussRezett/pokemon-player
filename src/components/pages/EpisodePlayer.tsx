@@ -79,7 +79,7 @@ export default function EpisodePlayer() {
                 )}
             </div>
 
-            <h1>
+            <h1 style={{ color: "#ffffff" }}>
                 {String(episode.season).padStart(2, '0')}X{String(episode.episode).padStart(2, '0')} - {' '}
                 <span style={{ textTransform: 'capitalize' }}>{episode.name}</span>
             </h1>
