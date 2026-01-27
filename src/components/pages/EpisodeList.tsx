@@ -19,9 +19,6 @@ export default function EpisodeList() {
         return acc;
     }, {} as Record<number, typeof episodes>);
 
-    console.log(episodes);
-
-
     const seasons = Object.keys(episodesBySeason)
         .map(Number)
         .sort((a, b) => a - b);
@@ -29,7 +26,6 @@ export default function EpisodeList() {
     // Si no hay temporada seleccionada, mostrar la primera
     useEffect(() => {
         if (selectedSeason === null && seasons.length > 0) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
             setSelectedSeason(seasons[0]);
         }
     }, [seasons, selectedSeason]);
@@ -54,6 +50,7 @@ export default function EpisodeList() {
             </div>
         );
     }
+
     return (
         <div style={{ padding: '20px' }}>
             <h1>Pokémon - Todos los Episodios</h1>
@@ -168,10 +165,30 @@ export default function EpisodeList() {
                                             </div>
                                         )}
                                         <div style={{ flex: 1 }}>
-                                            <div>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                                                 <strong>
                                                     {String(episode.season).padStart(2, '0')}x{String(episode.episode).padStart(2, '0')}
                                                 </strong>
+                                                <span style={{
+                                                    fontSize: '11px',
+                                                    padding: '2px 6px',
+                                                    borderRadius: '4px',
+                                                    backgroundColor: '#e0e0e0',
+                                                    color: '#666',
+                                                    fontWeight: 'bold'
+                                                }}>
+                                                    #{episode.absoluteEpisode}
+                                                </span>
+                                                <span style={{
+                                                    fontSize: '11px',
+                                                    padding: '2px 6px',
+                                                    borderRadius: '4px',
+                                                    backgroundColor: episode.isCanon ? '#d4edda' : '#fff3cd',
+                                                    color: episode.isCanon ? '#155724' : '#856404',
+                                                    fontWeight: 'bold'
+                                                }}>
+                                                    {episode.isCanon ? '📖 Historia' : '🔄 Relleno'}
+                                                </span>
                                                 {' - '}
                                                 <span style={{ textTransform: 'capitalize' }}>{episode.name}</span>
                                             </div>

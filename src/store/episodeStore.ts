@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import EPISODES_JSON from '../data/urls.json';
+import { CANON_EPISODES_STRING, NON_CANON_EPISODES_STRING, parseEpisodes } from '../utils/canon';
 
 const WATCHED_EPISODES_KEY = 'pokemon_watched_episodes';
 
@@ -7,8 +8,10 @@ interface Episode {
   code: string;
   season: number;
   episode: number;
+  absoluteEpisode: number; // Número absoluto en toda la serie
   name: string;
   url: string;
+  isCanon: boolean; // true = historia, false = relleno
 }
 
 interface EpisodeStore {
@@ -46,8 +49,10 @@ const parseEpisodeUrl = (url: string, index: number, allUrls: string[]): Episode
       code,
       season: parseInt(season, 10),
       episode: parseInt(episode, 10),
+      absoluteEpisode: 0, // Se asignará después
       name: cleanName(name),
-      url
+      url,
+      isCanon: false // Se asignará después
     };
   }
   
@@ -72,8 +77,10 @@ const parseEpisodeUrl = (url: string, index: number, allUrls: string[]): Episode
       code,
       season,
       episode: parseInt(episode, 10),
+      absoluteEpisode: 0, // Se asignará después
       name,
-      url
+      url,
+      isCanon: false // Se asignará después
     };
   }
   
@@ -110,6 +117,34 @@ const saveWatchedEpisodes = (watchedEpisodes: Set<string>) => {
   }
 };
 
+// Asignar números absolutos y canon/relleno
+const assignAbsoluteNumbersAndCanon = (episodes: Episode[]): Episode[] => {
+  // Parsear los strings de canon y no-canon
+  const canonEpisodes = new Set(parseEpisodes(CANON_EPISODES_STRING));
+  const nonCanonEpisodes = new Set(parseEpisodes(NON_CANON_EPISODES_STRING));
+  
+  // Asignar número absoluto (1-indexed basado en el orden)
+  return episodes.map((episode, index) => {
+    const absoluteEpisode = index + 1;
+    
+    // Determinar si es canon o relleno
+    let isCanon = true; // Por defecto es canon
+    
+    if (canonEpisodes.has(absoluteEpisode)) {
+      isCanon = true;
+    } else if (nonCanonEpisodes.has(absoluteEpisode)) {
+      isCanon = false;
+    }
+    // Si no está en ninguna lista, mantener como canon por defecto
+    
+    return {
+      ...episode,
+      absoluteEpisode,
+      isCanon
+    };
+  });
+};
+
 export const useEpisodeStore = create<EpisodeStore>((set, get) => ({
   episodes: [],
   loading: false,
@@ -124,12 +159,17 @@ export const useEpisodeStore = create<EpisodeStore>((set, get) => ({
     set({ loading: true, error: null });
     
     try {
-      const urls: string[] = EPISODES_JSON
-      const parsedEpisodes = urls
+      const urls: string[] = EPISODES_JSON;
+      let parsedEpisodes = urls
         .map((url, index) => parseEpisodeUrl(url, index, urls))
         .filter((ep): ep is Episode => ep !== null);
       
+      // Asignar números absolutos y estado canon/relleno
+      parsedEpisodes = assignAbsoluteNumbersAndCanon(parsedEpisodes);
+      
       console.log(`Total de episodios parseados: ${parsedEpisodes.length} de ${urls.length} URLs`);
+      console.log(`Episodios canon: ${parsedEpisodes.filter(ep => ep.isCanon).length}`);
+      console.log(`Episodios relleno: ${parsedEpisodes.filter(ep => !ep.isCanon).length}`);
       
       set({ episodes: parsedEpisodes, loading: false });
     } catch (error) {

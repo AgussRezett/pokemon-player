@@ -57,35 +57,60 @@ export default function EpisodePlayer() {
 
     return (
         <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
-            <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
                 <Link to="/" style={{ textDecoration: 'none', color: '#007bff' }}>
                     ← Volver al listado
                 </Link>
 
-                {watched && (
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                     <div style={{
-                        backgroundColor: '#28a745',
-                        color: 'white',
+                        backgroundColor: episode.isCanon ? '#d4edda' : '#fff3cd',
+                        color: episode.isCanon ? '#155724' : '#856404',
                         padding: '8px 16px',
                         borderRadius: '20px',
                         fontSize: '14px',
+                        fontWeight: 'bold',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '8px'
+                        gap: '6px'
                     }}>
-                        <span style={{ fontSize: '16px' }}>✓</span>
-                        Ya visto
+                        {episode.isCanon ? '📖 Historia' : '🔄 Relleno'}
                     </div>
-                )}
+
+                    {watched && (
+                        <div style={{
+                            backgroundColor: '#28a745',
+                            color: 'white',
+                            padding: '8px 16px',
+                            borderRadius: '20px',
+                            fontSize: '14px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px'
+                        }}>
+                            <span style={{ fontSize: '16px' }}>✓</span>
+                            Ya visto
+                        </div>
+                    )}
+                </div>
             </div>
 
-            <h1 style={{ color: "#ffffff" }}>
+            <h1 style={{ color: "#ffffff", marginBottom: '10px' }}>
                 {String(episode.season).padStart(2, '0')}X{String(episode.episode).padStart(2, '0')} - {' '}
                 <span style={{ textTransform: 'capitalize' }}>{episode.name}</span>
             </h1>
 
-            <div style={{ marginBottom: '10px', color: '#666' }}>
-                Temporada {episode.season}, Episodio {episode.episode}
+            <div style={{ marginBottom: '20px', color: '#999', display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
+                <span>Temporada {episode.season}, Episodio {episode.episode}</span>
+                <span style={{
+                    backgroundColor: '#333',
+                    padding: '4px 10px',
+                    borderRadius: '12px',
+                    fontSize: '13px',
+                    fontWeight: 'bold'
+                }}>
+                    Episodio Absoluto #{episode.absoluteEpisode}
+                </span>
             </div>
 
             {/* Reproductor de video */}
@@ -117,7 +142,20 @@ export default function EpisodePlayer() {
                 <p><strong>Código:</strong> {episode.code}</p>
                 <p><strong>Temporada:</strong> {episode.season}</p>
                 <p><strong>Episodio:</strong> {episode.episode}</p>
+                <p><strong>Episodio Absoluto:</strong> #{episode.absoluteEpisode}</p>
                 <p><strong>Nombre:</strong> <span style={{ textTransform: 'capitalize' }}>{episode.name}</span></p>
+                <p>
+                    <strong>Tipo:</strong> {' '}
+                    <span style={{
+                        padding: '4px 8px',
+                        borderRadius: '4px',
+                        backgroundColor: episode.isCanon ? '#d4edda' : '#fff3cd',
+                        color: episode.isCanon ? '#155724' : '#856404',
+                        fontWeight: 'bold'
+                    }}>
+                        {episode.isCanon ? '📖 Historia (Canon)' : '🔄 Relleno (Filler)'}
+                    </span>
+                </p>
                 <p>
                     <strong>Estado:</strong> {' '}
                     {watched ? (
