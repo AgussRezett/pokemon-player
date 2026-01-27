@@ -5,9 +5,10 @@ import { useEpisodeStore } from '../../store/episodeStore';
 export default function EpisodePlayer() {
     const { code } = useParams<{ code: string }>();
     const navigate = useNavigate();
-    const { episodes, fetchEpisodes, getEpisodeByCode } = useEpisodeStore();
+    const { episodes, fetchEpisodes, getEpisodeByCode, markAsWatched, isWatched } = useEpisodeStore();
 
     const episode = code ? getEpisodeByCode(code) : null;
+    const watched = code ? isWatched(code) : false;
 
     useEffect(() => {
         // Asegurarnos de que los episodios estén cargados
@@ -15,6 +16,17 @@ export default function EpisodePlayer() {
             fetchEpisodes();
         }
     }, [episodes.length, fetchEpisodes]);
+
+    // Marcar como visto después de 10 segundos
+    useEffect(() => {
+        if (code && !watched) {
+            const timer = setTimeout(() => {
+                markAsWatched(code);
+            }, 10000); // 10 segundos
+
+            return () => clearTimeout(timer);
+        }
+    }, [code, watched, markAsWatched]);
 
     // Encontrar episodio anterior y siguiente
     const currentIndex = episodes.findIndex(ep => ep.code === code);
@@ -45,10 +57,26 @@ export default function EpisodePlayer() {
 
     return (
         <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
-            <div style={{ marginBottom: '20px' }}>
+            <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Link to="/" style={{ textDecoration: 'none', color: '#007bff' }}>
                     ← Volver al listado
                 </Link>
+
+                {watched && (
+                    <div style={{
+                        backgroundColor: '#28a745',
+                        color: 'white',
+                        padding: '8px 16px',
+                        borderRadius: '20px',
+                        fontSize: '14px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px'
+                    }}>
+                        <span style={{ fontSize: '16px' }}>✓</span>
+                        Ya visto
+                    </div>
+                )}
             </div>
 
             <h1>
@@ -59,9 +87,6 @@ export default function EpisodePlayer() {
             <div style={{ marginBottom: '10px', color: '#666' }}>
                 Temporada {episode.season}, Episodio {episode.episode}
             </div>
-            {
-                JSON.stringify(episode)
-            }
 
             {/* Reproductor de video */}
             <div style={{
@@ -93,6 +118,14 @@ export default function EpisodePlayer() {
                 <p><strong>Temporada:</strong> {episode.season}</p>
                 <p><strong>Episodio:</strong> {episode.episode}</p>
                 <p><strong>Nombre:</strong> <span style={{ textTransform: 'capitalize' }}>{episode.name}</span></p>
+                <p>
+                    <strong>Estado:</strong> {' '}
+                    {watched ? (
+                        <span style={{ color: '#28a745', fontWeight: 'bold' }}>✓ Visto</span>
+                    ) : (
+                        <span style={{ color: '#6c757d' }}>Se marcará como visto en 10 segundos...</span>
+                    )}
+                </p>
             </div>
 
             {/* Navegación entre episodios */}
