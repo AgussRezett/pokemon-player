@@ -1,0 +1,104 @@
+:root {
+  // Transiciones
+  --transition-speed: 0.2s;
+}
+
+// Tema Claro
+[data-theme='light'] {
+  // Backgrounds
+  --bg-primary: #f5f5f5;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #fafafa;
+  --bg-hover: #e8e8e8;
+  --bg-selected: #007bff;
+
+  // Texto
+  --text-primary: #1a1a1a;
+  --text-secondary: #666666;
+  --text-tertiary: #999999;
+  --text-inverse: #ffffff;
+
+  // Bordes
+  --border-color: #e0e0e0;
+  --border-hover: #cccccc;
+
+  // Estados
+  --success-bg: #d4edda;
+  --success-text: #155724;
+  --success-border: #c3e6cb;
+
+  --warning-bg: #fff3cd;
+  --warning-text: #856404;
+  --warning-border: #ffeaa7;
+
+  --danger-bg: #f8d7da;
+  --danger-text: #721c24;
+  --danger-border: #f5c6cb;
+
+  --watched-bg: rgba(40, 167, 69, 0.08);
+  --watched-border: #28a745;
+
+  // Badges
+  --badge-absolute-bg: #e0e0e0;
+  --badge-absolute-text: #555555;
+
+  // Selector de temporada
+  --season-selector-bg: #ffffff;
+  --season-selector-border: #e0e0e0;
+
+  // Botones de temporada
+  --season-btn-bg: #f8f9fa;
+  --season-btn-border: #dee2e6;
+  --season-btn-hover-bg: #e9ecef;
+  --season-btn-hover-border: #ced4da;
+}
+
+// Tema Oscuro
+[data-theme='dark'] {
+  // Backgrounds
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #1a1a1a;
+  --bg-tertiary: #252525;
+  --bg-hover: #2a2a2a;
+  --bg-selected: #007bff;
+
+  // Texto
+  --text-primary: #ffffff;
+  --text-secondary: #e0e0e0;
+  --text-tertiary: #999999;
+  --text-inverse: #1a1a1a;
+
+  // Bordes
+  --border-color: #333333;
+  --border-hover: #444444;
+
+  // Estados
+  --success-bg: #d4edda;
+  --success-text: #155724;
+  --success-border: #c3e6cb;
+
+  --warning-bg: #fff3cd;
+  --warning-text: #856404;
+  --warning-border: #ffeaa7;
+
+  --danger-bg: #f8d7da;
+  --danger-text: #721c24;
+  --danger-border: #f5c6cb;
+
+  --watched-bg: rgba(40, 167, 69, 0.05);
+  --watched-border: #28a745;
+
+  // Badges
+  --badge-absolute-bg: #444444;
+  --badge-absolute-text: #cccccc;
+
+  // Selector de temporada
+  --season-selector-bg: #1a1a1a;
+  --season-selector-border: #333333;
+
+  // Botones de temporada
+  --season-btn-bg: #2a2a2a;
+  --season-btn-border: #444444;
+  --season-btn-hover-bg: #333333;
+  --season-btn-hover-border: #555555;
+}
