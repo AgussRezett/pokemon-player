@@ -5,8 +5,9 @@ import ThemeToggle from '../../../components/ThemeToggle/ThemeToggle';
 import styles from './EpisodeList.module.scss';
 
 export default function EpisodeList() {
-  const { episodes, loading, error, fetchEpisodes, isWatched } =
+  const { episodes, loading, error, fetchEpisodes, isWatched, toggleWatched } =
     useEpisodeStore();
+
   const [selectedSeason, setSelectedSeason] = useState<number | null>(null);
 
   useEffect(() => {
@@ -42,6 +43,14 @@ export default function EpisodeList() {
   }, [seasons, selectedSeason]);
 
   const displaySeasons = selectedSeason !== null ? [selectedSeason] : seasons;
+
+  // Manejar toggle individual de episodio
+  const handleToggleEpisode = (code: string, event: React.MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    toggleWatched(code);
+  };
 
   if (loading) {
     return (
@@ -100,67 +109,106 @@ export default function EpisodeList() {
         </div>
       </div>
 
-      {displaySeasons.map((season) => (
-        <section key={season} className={styles.seasonSection}>
-          <h2>Temporada {season}</h2>
-          <div className={styles.episodesGrid}>
-            {episodesBySeason[season]
-              .sort((a, b) => a.episode - b.episode)
-              .map((episode) => {
-                const watched = isWatched(episode.code);
+      {displaySeasons.map((season) => {
+        const seasonEpisodes = episodesBySeason[season];
 
-                return (
-                  <Link
-                    key={episode.code}
-                    to={`/episode/${episode.season}/${episode.episode}`}
-                    className={`${styles.episodeCard} ${watched ? styles.watched : ''}`}
-                  >
-                    {watched && <div className={styles.watchedIcon}>✓</div>}
+        return (
+          <section key={season} className={styles.seasonSection}>
+            <h2>Temporada {season}</h2>
 
-                    <div className={styles.episodeContent}>
-                      <div className={styles.episodeInfo}>
-                        <span className={styles.episodeNumber}>
-                          {String(episode.season).padStart(2, '0')}x
-                          {String(episode.episode).padStart(2, '0')}
-                        </span>
+            <div className={styles.episodesGrid}>
+              {seasonEpisodes
+                .sort((a, b) => a.episode - b.episode)
+                .map((episode) => {
+                  const watched = isWatched(episode.code);
 
-                        <span
-                          className={`${styles.badge} ${styles.absoluteBadge}`}
+                  return (
+                    <div
+                      key={episode.code}
+                      className={`${styles.episodeCard} ${watched ? styles.watched : ''}`}
+                    >
+                      <Link
+                        to={`/episode/${episode.season}/${episode.episode}`}
+                        style={{
+                          flex: 1,
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '1rem',
+                          textDecoration: 'none',
+                          color: 'inherit',
+                          minWidth: 0,
+                        }}
+                      >
+                        {/* {watched && (
+                          <div className={styles.watchedIcon}>✓</div>
+                        )} */}
+
+                        <div className={styles.episodeContent}>
+                          <div className={styles.episodeInfo}>
+                            <span className={styles.episodeNumber}>
+                              {String(episode.season).padStart(2, '0')}x
+                              {String(episode.episode).padStart(2, '0')}
+                            </span>
+
+                            <span
+                              className={`${styles.badge} ${styles.absoluteBadge}`}
+                            >
+                              #{episode.absoluteEpisode}
+                            </span>
+
+                            <span
+                              className={`${styles.badge} ${episode.isCanon ? styles.canonBadge : styles.fillerBadge}`}
+                            >
+                              {episode.isCanon ? '📖 Historia' : '🔄 Relleno'}
+                            </span>
+
+                            {episode.isCensored && (
+                              <span
+                                className={`${styles.badge} ${styles.censoredBadge}`}
+                              >
+                                🚫 Censurado
+                              </span>
+                            )}
+
+                            <span className={styles.separator}>-</span>
+
+                            <span className={styles.episodeName}>
+                              {episode.name}
+                            </span>
+                          </div>
+
+                          <div className={styles.episodeCode}>
+                            Código: {episode.code}
+                          </div>
+                        </div>
+                      </Link>
+
+                      {/* Botón de toggle individual */}
+                      <div className={styles.episodeActions}>
+                        <button
+                          onClick={(e) => handleToggleEpisode(episode.code, e)}
+                          className={`${styles.toggleButton} ${watched ? styles.watched : ''}`}
+                          title={
+                            watched
+                              ? 'Marcar como no visto'
+                              : 'Marcar como visto'
+                          }
+                          aria-label={
+                            watched
+                              ? 'Marcar como no visto'
+                              : 'Marcar como visto'
+                          }
                         >
-                          #{episode.absoluteEpisode}
-                        </span>
-
-                        <span
-                          className={`${styles.badge} ${episode.isCanon ? styles.canonBadge : styles.fillerBadge}`}
-                        >
-                          {episode.isCanon ? '📖 Historia' : '🔄 Relleno'}
-                        </span>
-
-                        {episode.isCensored && (
-                          <span
-                            className={`${styles.badge} ${styles.censoredBadge}`}
-                          >
-                            🚫 Censurado
-                          </span>
-                        )}
-
-                        <span className={styles.separator}>-</span>
-
-                        <span className={styles.episodeName}>
-                          {episode.name}
-                        </span>
-                      </div>
-
-                      <div className={styles.episodeCode}>
-                        Código: {episode.code}
+                          {watched ? '✓' : '○'}
+                        </button>
                       </div>
                     </div>
-                  </Link>
-                );
-              })}
-          </div>
-        </section>
-      ))}
+                  );
+                })}
+            </div>
+          </section>
+        );
+      })}
     </div>
   );
 }

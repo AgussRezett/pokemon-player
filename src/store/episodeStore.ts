@@ -17,7 +17,7 @@ interface Episode {
   name: string;
   url: string;
   isCanon: boolean;
-  isCensored: boolean; // NUEVO
+  isCensored: boolean;
 }
 
 interface EpisodeStore {
@@ -32,6 +32,8 @@ interface EpisodeStore {
     episode: number
   ) => Episode | undefined;
   markAsWatched: (code: string) => void;
+  markAsUnwatched: (code: string) => void; // NUEVO
+  toggleWatched: (code: string) => void; // NUEVO
   isWatched: (code: string) => boolean;
   clearCache: () => void;
 }
@@ -41,23 +43,19 @@ const parseEpisodeUrl = (
   index: number,
   allUrls: string[]
 ): Episode | null => {
-  // Filtrar separadores de temporada (.mx)
   if (url.includes('.mx')) {
     return null;
   }
 
-  // Extraer el código del episodio - puede estar después de /e/ o /d/
   const codeMatch = url.match(/\/[ed]\/([^/]+)/);
   if (!codeMatch) return null;
   const code = codeMatch[1];
 
-  // Extraer la parte después del código
   const afterCode = url.split(
     `/${codeMatch[0].includes('/e/') ? 'e' : 'd'}/${code}/`
   )[1];
   if (!afterCode) return null;
 
-  // CASO 1: Formato estándar ##x## o ##X##
   const standardMatch = afterCode.match(
     /^(\d+)[xX](\d+)[_\-\s]*(.+?)(?:-?(1080p|960p))?$/i
   );
@@ -71,17 +69,15 @@ const parseEpisodeUrl = (
       name: cleanName(name),
       url,
       isCanon: false,
-      isCensored: false, // NUEVO
+      isCensored: false,
     };
   }
 
-  // CASO 2: Formato EP##
   const epMatch = afterCode.match(/^EP(\d+)[_\-\s]*(.+?)$/i);
   if (epMatch) {
     const [, episode] = epMatch;
     const name = cleanName(epMatch[2]);
 
-    // Buscar hacia atrás para encontrar la temporada más reciente
     let season = 1;
     for (let i = index - 1; i >= 0; i--) {
       const prevUrl = allUrls[i];
@@ -100,7 +96,7 @@ const parseEpisodeUrl = (
       name,
       url,
       isCanon: false,
-      isCensored: false, // NUEVO
+      isCensored: false,
     };
   }
 
@@ -143,7 +139,7 @@ const saveWatchedEpisodes = (watchedEpisodes: Set<string>) => {
 const assignAbsoluteNumbersAndCanon = (episodes: Episode[]): Episode[] => {
   const canonEpisodes = new Set(parseEpisodes(CANON_EPISODES_STRING));
   const nonCanonEpisodes = new Set(parseEpisodes(NON_CANON_EPISODES_STRING));
-  const censoredEpisodes = new Set(parseEpisodes(CENSORED_EPISODES)); // NUEVO
+  const censoredEpisodes = new Set(parseEpisodes(CENSORED_EPISODES));
 
   return episodes.map((episode, index) => {
     const absoluteEpisode = index + 1;
@@ -156,14 +152,13 @@ const assignAbsoluteNumbersAndCanon = (episodes: Episode[]): Episode[] => {
       isCanon = false;
     }
 
-    // NUEVO: Verificar si está censurado
     const isCensored = censoredEpisodes.has(absoluteEpisode);
 
     return {
       ...episode,
       absoluteEpisode,
       isCanon,
-      isCensored, // NUEVO
+      isCensored,
     };
   });
 };
@@ -200,7 +195,7 @@ export const useEpisodeStore = create<EpisodeStore>((set, get) => ({
       );
       console.log(
         `Episodios censurados: ${parsedEpisodes.filter((ep) => ep.isCensored).length}`
-      ); // NUEVO
+      );
 
       set({ episodes: parsedEpisodes, loading: false });
     } catch (error) {
@@ -227,6 +222,25 @@ export const useEpisodeStore = create<EpisodeStore>((set, get) => ({
     newWatched.add(code);
     saveWatchedEpisodes(newWatched);
     set({ watchedEpisodes: newWatched });
+  },
+
+  // NUEVO: Desmarcar como visto
+  markAsUnwatched: (code: string) => {
+    const { watchedEpisodes } = get();
+    const newWatched = new Set(watchedEpisodes);
+    newWatched.delete(code);
+    saveWatchedEpisodes(newWatched);
+    set({ watchedEpisodes: newWatched });
+  },
+
+  // NUEVO: Toggle entre visto/no visto
+  toggleWatched: (code: string) => {
+    const { watchedEpisodes } = get();
+    if (watchedEpisodes.has(code)) {
+      get().markAsUnwatched(code);
+    } else {
+      get().markAsWatched(code);
+    }
   },
 
   isWatched: (code: string) => {
