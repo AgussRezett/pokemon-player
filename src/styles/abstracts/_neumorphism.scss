@@ -12,8 +12,8 @@
                         color.adjust($bg, $lightness: $lightness-bottom));
 
         box-shadow:
-                10px 10px $shadow-spread rgba(163, 177, 198, 0.45),
-                -10px -10px $shadow-spread rgba(255, 255, 255, 0.9),
+                5px 5px $shadow-spread var(--dark),
+                -5px -5px $shadow-spread var(--light),
                 inset 1px 1px 2px rgba(255, 255, 255, 0.6),
                 inset -1px -1px 2px rgba(163, 177, 198, 0.2);
 }

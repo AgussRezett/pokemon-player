@@ -1,4 +1,4 @@
-@import './styles/themes.scss';
+@import './styles/main.scss';
 
 * {
   margin: 0;
@@ -8,8 +8,9 @@
 
 html,
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  font-family: var(--font-primary);
+  /* font-family: var(--font-primary), -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: var(--bg-gradient-1);
@@ -21,6 +22,10 @@ body {
 
 #root {
   min-height: 100vh;
+}
+
+button {
+  all: unset;
 }
 
 ::-webkit-scrollbar {
