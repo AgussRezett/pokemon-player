@@ -1,0 +1,24 @@
+.footer {
+    padding: 2rem;
+    margin-top: 4rem;
+    background: var(--bg-glass);
+    border-top: 1px solid var(--border-color);
+    backdrop-filter: blur(10px);
+}
+
+.footerContent {
+    max-width: 1400px;
+    margin: 0 auto;
+    text-align: center;
+
+    p {
+        margin: 0.5rem 0;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+
+    .copyright {
+        font-size: 0.8rem;
+        color: var(--text-tertiary);
+    }
+}

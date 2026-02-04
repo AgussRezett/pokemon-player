@@ -25,7 +25,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.25rem;
+  padding: 0.875rem 1.25rem;
   background: var(--bg-primary);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
@@ -50,13 +50,13 @@
 
 .badges {
   display: flex;
-  gap: 0.75rem;
+  gap: 0.875rem;
   align-items: center;
   flex-wrap: wrap;
 }
 
 .badge {
-  padding: 0.75rem 1.25rem;
+  padding: 0.875rem 1.25rem;
   border-radius: var(--radius-full);
   font-size: 0.9rem;
   font-weight: 700;
@@ -255,7 +255,7 @@
 
     strong {
       color: var(--text-primary);
-      margin-right: 0.75rem;
+      margin-right: 0.875rem;
       font-weight: 700;
     }
   }
@@ -263,7 +263,7 @@
 
 .detailBadge {
   display: inline-flex;
-  padding: 0.4rem 0.75rem;
+  padding: 0.4rem 0.875rem;
   border-radius: var(--radius-full);
   font-weight: 700;
   font-size: 0.875rem;
@@ -351,7 +351,7 @@
   .navLabel {
     display: block;
     font-weight: 700;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.875rem;
     font-size: 1.1rem;
     position: relative;
     z-index: 1;
@@ -359,7 +359,7 @@
 
   .navInfo {
     display: block;
-    font-size: 0.85rem;
+    font-size: 0.875rem;
     opacity: 0.95;
     position: relative;
     z-index: 1;
@@ -403,7 +403,7 @@
     color: var(--color-primary);
     text-decoration: none;
     font-weight: 600;
-    padding: 0.75rem 1.25rem;
+    padding: 0.875rem 1.25rem;
     background: var(--bg-primary);
     backdrop-filter: var(--glass-blur);
     -webkit-backdrop-filter: var(--glass-blur);
