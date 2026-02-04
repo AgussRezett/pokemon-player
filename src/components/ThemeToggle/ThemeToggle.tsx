@@ -12,9 +12,6 @@ export default function ThemeToggle() {
       title={`Cambiar a modo ${theme === 'light' ? 'oscuro' : 'claro'}`}
     >
       <span className={styles.icon}>{theme === 'light' ? '🌙' : '☀️'}</span>
-      <span className={styles.label}>
-        {theme === 'light' ? 'Oscuro' : 'Claro'}
-      </span>
     </button>
   );
 }

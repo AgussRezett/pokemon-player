@@ -82,30 +82,32 @@ export default function EpisodeList() {
       </header>
 
       <div className={styles.seasonSelector}>
-        <h3>Selecciona una temporada:</h3>
-        <div className={styles.seasonsGrid}>
-          {seasons.map((season) => {
-            const seasonEpisodes = episodesBySeason[season];
-            const watchedCount = seasonEpisodes.filter((ep) =>
-              isWatched(ep.code)
-            ).length;
-            const totalCount = seasonEpisodes.length;
-            const isComplete = watchedCount === totalCount && totalCount > 0;
+        <div className={styles.seasonSelectorContent}>
+          <h3>Selecciona una temporada:</h3>
+          <div className={styles.seasonsGrid}>
+            {seasons.map((season) => {
+              const seasonEpisodes = episodesBySeason[season];
+              const watchedCount = seasonEpisodes.filter((ep) =>
+                isWatched(ep.code)
+              ).length;
+              const totalCount = seasonEpisodes.length;
+              const isComplete = watchedCount === totalCount && totalCount > 0;
 
-            return (
-              <button
-                key={season}
-                onClick={() => setSelectedSeason(season)}
-                className={`${styles.seasonButton} ${selectedSeason === season ? styles.selected : ''}`}
-              >
-                Temporada {season}
-                <div className={styles.seasonProgress}>
-                  {watchedCount}/{totalCount} vistos
-                </div>
-                {isComplete && <div className={styles.completeBadge}>✓</div>}
-              </button>
-            );
-          })}
+              return (
+                <button
+                  key={season}
+                  onClick={() => setSelectedSeason(season)}
+                  className={`${styles.seasonButton} ${selectedSeason === season ? styles.selected : ''}`}
+                >
+                  Temporada {season}
+                  <div className={styles.seasonProgress}>
+                    {watchedCount}/{totalCount} vistos
+                  </div>
+                  {isComplete && <div className={styles.completeBadge}>✓</div>}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
