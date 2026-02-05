@@ -211,6 +211,9 @@ export const useEpisodeStore = create<EpisodeStore>((set, get) => ({
   },
 
   getEpisodeBySeasonAndNumber: (season: number, episode: number) => {
+    console.log(season);
+    console.log(episode);
+    
     return get().episodes.find(
       (ep) => ep.season === season && ep.episode === episode
     );

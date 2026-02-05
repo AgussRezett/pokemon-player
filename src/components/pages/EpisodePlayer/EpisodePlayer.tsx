@@ -1,16 +1,15 @@
 import { useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { useEpisodeStore } from '../../../store/episodeStore';
-import ThemeToggle from '../../../components/ThemeToggle/ThemeToggle';
 import styles from './EpisodePlayer.module.scss';
+import { useEpisodeStore } from '../../../store/episodeStore';
 
 export default function EpisodePlayer() {
-  const { season: seasonParam, episode: episodeParam } = useParams<{ season: string; episode: string }>();
+  const { seasonNumber, episodeNumber } = useParams<{ seasonNumber: string; episodeNumber: string }>();
   const navigate = useNavigate();
   const { episodes, fetchEpisodes, getEpisodeBySeasonAndNumber, markAsWatched, isWatched } = useEpisodeStore();
 
-  const season = seasonParam ? parseInt(seasonParam, 10) : null;
-  const episodeNum = episodeParam ? parseInt(episodeParam, 10) : null;
+  const season = seasonNumber ? parseInt(seasonNumber, 10) : null;
+  const episodeNum = episodeNumber ? parseInt(episodeNumber, 10) : null;
 
   const episode = season !== null && episodeNum !== null
     ? getEpisodeBySeasonAndNumber(season, episodeNum)
@@ -31,13 +30,13 @@ export default function EpisodePlayer() {
         .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
         .join(' ');
 
-      document.title = `Temporada ${episode.season} Capítulo ${episode.episode}: ${capitalizedName} | Pokémon`;
+      document.title = `Temporada ${episode.season} Episodio ${episode.episode}: ${capitalizedName} | Pokémon Tracker`;
     } else {
-      document.title = 'Pokémon';
+      document.title = 'Pokémon Tracker';
     }
 
     return () => {
-      document.title = 'Pokémon';
+      document.title = 'Pokémon Tracker';
     };
   }, [episode]);
 
@@ -51,15 +50,37 @@ export default function EpisodePlayer() {
     }
   }, [episode, watched, markAsWatched]);
 
-  const currentIndex = episode ? episodes.findIndex(ep => ep.code === episode.code) : -1;
-  const previousEpisode = currentIndex > 0 ? episodes[currentIndex - 1] : null;
-  const nextEpisode = currentIndex >= 0 && currentIndex < episodes.length - 1 ? episodes[currentIndex + 1] : null;
+  // Encontrar episodios anterior y siguiente
+  const seasonEpisodes = episodes.filter(ep => ep.season === season);
+  const currentIndex = episode ? seasonEpisodes.findIndex(ep => ep.code === episode.code) : -1;
+  const previousEpisode = currentIndex > 0 ? seasonEpisodes[currentIndex - 1] : null;
+  const nextEpisode = currentIndex >= 0 && currentIndex < seasonEpisodes.length - 1 ? seasonEpisodes[currentIndex + 1] : null;
+
+  // Colores por temporada
+  const seasonColors = [
+    '#FF6B6B', '#FFB84D', '#FFD93D', '#6BCF7F',
+    '#4ECDC4', '#5271FF', '#9B59B6', '#E91E63'
+  ];
+  const seasonColor = season ? seasonColors[(season - 1) % seasonColors.length] : '#5271FF';
+
+  // Nombres de temporadas
+  const getSeasonName = (season: number) => {
+    const names: Record<number, string> = {
+      1: 'Liga Índigo',
+      2: 'Las Aventuras en las Islas Naranja',
+      3: 'Liga Johto',
+      4: 'Maestros Johto',
+      5: 'Desafío Hoenn',
+      6: 'Liga Hoenn',
+    };
+    return names[season] || `Temporada ${season}`;
+  };
 
   if (episodes.length === 0) {
     return (
       <div className={styles.loadingContainer}>
-        <Link to="/">← Volver al listado</Link>
-        <h1>Cargando...</h1>
+        <div className={styles.loader}></div>
+        <h2>Cargando...</h2>
       </div>
     );
   }
@@ -67,9 +88,11 @@ export default function EpisodePlayer() {
   if (!episode) {
     return (
       <div className={styles.errorContainer}>
-        <Link to="/">← Volver al listado</Link>
-        <h1>Error</h1>
+        <h2>Error</h2>
         <p>No se encontró el episodio (Temporada {season}, Episodio {episodeNum})</p>
+        <Link to={season ? `/season/${season}` : '/'} className={styles.backButton}>
+          Volver
+        </Link>
       </div>
     );
   }
@@ -78,124 +101,115 @@ export default function EpisodePlayer() {
 
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-        <Link to="/" className={styles.backLink}>
-          ← Volver al listado
+      {/* Breadcrumb / Volver */}
+      <div className={styles.breadcrumb}>
+        <Link to={`/season/${season}`} className={styles.backLink}>
+          ← Volver a Temporada {season}
         </Link>
+      </div>
 
-        <div className={styles.badges}>
-          <ThemeToggle />
-
-          <div className={`${styles.badge} ${episode.isCanon ? styles.canonBadge : styles.fillerBadge}`}>
-            {episode.isCanon ? '📖 Historia' : '🔄 Relleno'}
+      {/* Card principal del episodio */}
+      <div
+        className={styles.episodeCard}
+        style={{ '--season-color': seasonColor } as React.CSSProperties}
+      >
+        {/* Header del episodio */}
+        <div className={styles.episodeHeader}>
+          <div className={styles.episodeInfo}>
+            <span className={styles.seasonBadge}>
+              Temporada {episode.season} · {getSeasonName(episode.season)}
+            </span>
+            <h1 className={styles.episodeTitle}>
+              Episodio {episode.episode}
+            </h1>
           </div>
 
-          {episode.isCensored && (
-            <div className={`${styles.badge} ${styles.censoredBadge}`}>
-              🚫 Censurado
-            </div>
-          )}
+          {/* Badges de estado */}
+          <div className={styles.badges}>
+            <span
+              className={`${styles.badge} ${episode.isCanon ? styles.badgeCanon : styles.badgeFiller}`}
+            >
+              {episode.isCanon ? '⚡ Episodio de Historia' : '🔄 Episodio de Relleno'}
+            </span>
 
-          {watched && (
-            <div className={`${styles.badge} ${styles.watchedBadge}`}>
-              <span>✓</span>
-              Ya visto
-            </div>
-          )}
-        </div>
-      </header>
-
-      <h1 className={styles.title}>
-        {String(episode.season).padStart(2, '0')}X{String(episode.episode).padStart(2, '0')} -{' '}
-        <span className={styles.episodeName}>{episode.name}</span>
-      </h1>
-
-      <div className={styles.metadata}>
-        <span>Temporada {episode.season}, Episodio {episode.episode}</span>
-        <span className={styles.absoluteBadge}>
-          Episodio Absoluto #{episode.absoluteEpisode}
-        </span>
-      </div>
-
-      <div className={styles.videoContainer}>
-        <iframe
-          src={embedUrl}
-          allowFullScreen
-          title={`${episode.season}x${episode.episode} - ${episode.name}`}
-        />
-      </div>
-
-      <div className={styles.detailsCard}>
-        <h3>Detalles del Episodio</h3>
-        <p><strong>Código:</strong> {episode.code}</p>
-        <p><strong>Temporada:</strong> {episode.season}</p>
-        <p><strong>Episodio:</strong> {episode.episode}</p>
-        <p><strong>Episodio Absoluto:</strong> #{episode.absoluteEpisode}</p>
-        <p>
-          <strong>Nombre:</strong>
-          <span style={{ textTransform: 'capitalize' }}> {episode.name}</span>
-        </p>
-        <p>
-          <strong>Tipo:</strong>{' '}
-          <span className={`${styles.detailBadge} ${episode.isCanon ? styles.canonBadge : styles.fillerBadge}`}>
-            {episode.isCanon ? '📖 Historia (Canon)' : '🔄 Relleno (Filler)'}
-          </span>
-          {episode.isCensored && (
-            <>
-              {' '}
-              <span className={`${styles.detailBadge} ${styles.censoredBadge}`}>
+            {episode.isCensored && (
+              <span className={`${styles.badge} ${styles.badgeCensored}`}>
                 🚫 Censurado
               </span>
-            </>
-          )}
-        </p>
-        <p>
-          <strong>Estado:</strong>{' '}
-          {watched ? (
-            <span style={{ color: 'var(--success-text)', fontWeight: 'bold' }}>✓ Visto</span>
-          ) : (
-            <span style={{ color: 'var(--text-tertiary)' }}>Se marcará como visto en 10 segundos...</span>
-          )}
-        </p>
+            )}
+
+            {watched && (
+              <span className={`${styles.badge} ${styles.badgeWatched}`}>
+                ✓ Marcar como visto
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Reproductor de video */}
+        <div className={styles.videoWrapper}>
+          <div className={styles.videoContainer}>
+            <iframe
+              src={embedUrl}
+              allowFullScreen
+              title={`${episode.season}x${episode.episode} - ${episode.name}`}
+            />
+          </div>
+        </div>
+
+        {/* Información del episodio */}
+        <div className={styles.episodeDetails}>
+          <div className={styles.episodeMeta}>
+            <h2 className={styles.episodeName}>{episode.name}</h2>
+            <p className={styles.episodeCode}>Código: {episode.code}</p>
+          </div>
+        </div>
       </div>
 
-      <nav className={styles.navigation}>
+      {/* Navegación entre episodios */}
+      <div className={styles.navigation}>
         <button
-          onClick={() => previousEpisode && navigate(`/episode/${previousEpisode.season}/${previousEpisode.episode}`)}
+          onClick={() => previousEpisode && navigate(`/season/${season}/episode/${previousEpisode.episode}`)}
           disabled={!previousEpisode}
-          className={styles.navButton}
+          className={`${styles.navButton} ${styles.navPrev}`}
         >
+          <div className={styles.navIcon}>←</div>
           {previousEpisode ? (
-            <>
-              <span className={styles.navLabel}>← Episodio Anterior</span>
-              <span className={styles.navInfo}>
-                {String(previousEpisode.season).padStart(2, '0')}x{String(previousEpisode.episode).padStart(2, '0')} -{' '}
-                <span className={styles.navEpisodeName}>{previousEpisode.name}</span>
+            <div className={styles.navContent}>
+              <span className={styles.navLabel}>Episodio Anterior</span>
+              <span className={styles.navTitle}>
+                Episodio {previousEpisode.episode}: {previousEpisode.name}
               </span>
-            </>
+            </div>
           ) : (
-            <span className={styles.navLabel}>No hay episodio anterior</span>
+            <div className={styles.navContent}>
+              <span className={styles.navLabel}>No hay episodio anterior</span>
+            </div>
           )}
         </button>
 
+        <div className={styles.navDivider}></div>
+
         <button
-          onClick={() => nextEpisode && navigate(`/episode/${nextEpisode.season}/${nextEpisode.episode}`)}
+          onClick={() => nextEpisode && navigate(`/season/${season}/episode/${nextEpisode.episode}`)}
           disabled={!nextEpisode}
-          className={styles.navButton}
+          className={`${styles.navButton} ${styles.navNext}`}
         >
           {nextEpisode ? (
-            <>
-              <span className={styles.navLabel}>Siguiente Episodio →</span>
-              <span className={styles.navInfo}>
-                {String(nextEpisode.season).padStart(2, '0')}x{String(nextEpisode.episode).padStart(2, '0')} -{' '}
-                <span className={styles.navEpisodeName}>{nextEpisode.name}</span>
+            <div className={styles.navContent}>
+              <span className={styles.navLabel}>Siguiente Episodio</span>
+              <span className={styles.navTitle}>
+                Episodio {nextEpisode.episode}: {nextEpisode.name}
               </span>
-            </>
+            </div>
           ) : (
-            <span className={styles.navLabel}>No hay siguiente episodio</span>
+            <div className={styles.navContent}>
+              <span className={styles.navLabel}>No hay siguiente episodio</span>
+            </div>
           )}
+          <div className={styles.navIcon}>→</div>
         </button>
-      </nav>
+      </div>
     </div>
   );
 }

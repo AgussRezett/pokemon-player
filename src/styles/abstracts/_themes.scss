@@ -18,64 +18,23 @@
   --text-primary: #2c3e50;
   --text-secondary: #5a6c7d;
   --text-tertiary: #95a5a6;
-  --text-inverse: #ffffff;
-  --text-muted: #b0bec5;
 
   // Bordes
   --border-color: rgba(0, 0, 0, 0.06);
-  --border-hover: rgba(0, 0, 0, 0.12);
-  --border-glass: rgba(255, 255, 255, 0.4);
 
   // Colores Pokemon TCG
-  --color-primary: #4fc3f7;
-  --color-primary-hover: #29b6f6;
-  --color-primary-light: #81d4fa;
-
-  --color-secondary: #ba68c8;
-  --color-secondary-hover: #ab47bc;
-
-  --color-accent: #ffd54f;
-  --color-accent-hover: #ffca28;
+  --color-primary: #08b7da;
+  --color-secondary: #00e1b3;
 
   // Estados
   --success-bg: #c8e6c9;
   --success-text: #2e7d32;
-  --success-border: #a5d6a7;
-  --success-glow: rgba(76, 175, 80, 0.3);
 
   --warning-bg: #fff9c4;
   --warning-text: #f57f17;
-  --warning-border: #fff59d;
 
   --danger-bg: #ffcdd2;
   --danger-text: #c62828;
-  --danger-border: #ef9a9a;
-
-  --info-bg: #b3e5fc;
-  --info-text: #01579b;
-  --info-border: #81d4fa;
-
-  // Watched state
-  --watched-bg: rgba(129, 212, 250, 0.15);
-  --watched-border: #4fc3f7;
-  --watched-glow: rgba(79, 195, 247, 0.4);
-
-  // Badges
-  --badge-absolute-bg: #e1f5fe;
-  --badge-absolute-text: #0277bd;
-  --badge-absolute-border: #b3e5fc;
-
-  // Selector de temporada
-  --season-selector-bg: var(--bg-primary);
-  --season-selector-border: var(--border-glass);
-
-  // Botones de temporada
-  --season-btn-bg: rgba(255, 255, 255, 0.6);
-  --season-btn-border: rgba(79, 195, 247, 0.2);
-  --season-btn-hover-bg: rgba(255, 255, 255, 0.9);
-  --season-btn-selected-bg: linear-gradient(135deg, #4fc3f7 0%, #29b6f6 100%);
-  --season-btn-shadow: var(--shadow-card);
-  --season-btn-shadow-hover: var(--shadow-elevated);
 }
 
 // Tema Oscuro (TCG Pocket Dark Style)
@@ -94,62 +53,21 @@
   --text-primary: #e8eaf6;
   --text-secondary: #b0b9d4;
   --text-tertiary: #7e88a8;
-  --text-inverse: #202023;
-  --text-muted: #5a6483;
 
   // Bordes
   --border-color: rgba(255, 255, 255, 0.08);
-  --border-hover: rgba(255, 255, 255, 0.15);
-  --border-glass: rgba(255, 255, 255, 0.15);
 
   // Colores Pokemon TCG
   --color-primary: #4fc3f7;
-  --color-primary-hover: #81d4fa;
-  --color-primary-light: #b3e5fc;
-
   --color-secondary: #ce93d8;
-  --color-secondary-hover: #ba68c8;
-
-  --color-accent: #ffd54f;
-  --color-accent-hover: #ffe082;
 
   // Estados
   --success-bg: rgba(129, 199, 132, 0.2);
   --success-text: #81c784;
-  --success-border: rgba(129, 199, 132, 0.4);
-  --success-glow: rgba(129, 199, 132, 0.3);
 
   --warning-bg: rgba(255, 213, 79, 0.2);
   --warning-text: #ffd54f;
-  --warning-border: rgba(255, 213, 79, 0.4);
 
   --danger-bg: rgba(239, 154, 154, 0.2);
   --danger-text: #ef9a9a;
-  --danger-border: rgba(239, 154, 154, 0.4);
-
-  --info-bg: rgba(79, 195, 247, 0.2);
-  --info-text: #4fc3f7;
-  --info-border: rgba(79, 195, 247, 0.4);
-
-  // Watched state
-  --watched-bg: rgba(79, 195, 247, 0.12);
-  --watched-border: #4fc3f7;
-  --watched-glow: rgba(79, 195, 247, 0.4);
-
-  // Badges
-  --badge-absolute-bg: rgba(79, 195, 247, 0.15);
-  --badge-absolute-text: #81d4fa;
-  --badge-absolute-border: rgba(129, 212, 250, 0.3);
-
-  // Selector de temporada
-  --season-selector-bg: var(--bg-primary);
-  --season-selector-border: var(--border-glass);
-
-  // Botones de temporada
-  --season-btn-bg: rgba(26, 31, 58, 0.6);
-  --season-btn-border: rgba(79, 195, 247, 0.2);
-  --season-btn-hover-bg: rgba(26, 31, 58, 0.9);
-  --season-btn-selected-bg: linear-gradient(135deg, #4fc3f7 0%, #29b6f6 100%);
-  --season-btn-shadow: var(--shadow-card);
-  --season-btn-shadow-hover: var(--shadow-elevated);
 }

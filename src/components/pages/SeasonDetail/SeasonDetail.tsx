@@ -3,15 +3,13 @@ import { Link, useParams } from 'react-router-dom';
 import styles from './SeasonDetail.module.scss';
 import { useEpisodeStore } from '../../../store/episodeStore';
 
-type FilterWatched = 'all' | 'watched' | 'unwatched';
-type FilterType = 'all' | 'canon' | 'filler' | 'censored';
-
 export default function SeasonDetail() {
   const { seasonNumber } = useParams<{ seasonNumber: string }>();
   const { episodes, loading, fetchEpisodes, isWatched, toggleWatched } = useEpisodeStore();
 
-  const [filterWatched, setFilterWatched] = useState<FilterWatched>('all');
-  const [filterType, setFilterType] = useState<FilterType>('all');
+  // Cambiar a arrays para permitir múltiples selecciones
+  const [filterWatched, setFilterWatched] = useState<('watched' | 'unwatched')[]>([]);
+  const [filterType, setFilterType] = useState<('canon' | 'filler' | 'censored')[]>([]);
 
   const season = seasonNumber ? parseInt(seasonNumber, 10) : null;
 
@@ -75,18 +73,53 @@ export default function SeasonDetail() {
   ];
   const seasonColor = seasonColors[(season - 1) % seasonColors.length];
 
-  // Filtrar episodios
+  // Funciones de toggle para filtros tipo checkbox
+  const toggleFilterWatched = (filter: 'watched' | 'unwatched') => {
+    setFilterWatched(prev =>
+      prev.includes(filter)
+        ? prev.filter(f => f !== filter)
+        : [...prev, filter]
+    );
+  };
+
+  const toggleFilterType = (filter: 'canon' | 'filler' | 'censored') => {
+    setFilterType(prev =>
+      prev.includes(filter)
+        ? prev.filter(f => f !== filter)
+        : [...prev, filter]
+    );
+  };
+
+  // Limpiar todos los filtros
+  const clearAllFilters = () => {
+    setFilterWatched([]);
+    setFilterType([]);
+  };
+
+  // Filtrar episodios con lógica OR (mostrar si cumple CUALQUIERA de los filtros activos)
   const filteredEpisodes = seasonEpisodes.filter(episode => {
-    // Filtro de visto/no visto
-    if (filterWatched === 'watched' && !isWatched(episode.code)) return false;
-    if (filterWatched === 'unwatched' && isWatched(episode.code)) return false;
+    // Si no hay filtros de visto/no visto activos, mostrar todos
+    let passesWatchedFilter = true;
+    if (filterWatched.length > 0) {
+      passesWatchedFilter = filterWatched.some(filter => {
+        if (filter === 'watched') return isWatched(episode.code);
+        if (filter === 'unwatched') return !isWatched(episode.code);
+        return false;
+      });
+    }
 
-    // Filtro de tipo
-    if (filterType === 'canon' && !episode.isCanon) return false;
-    if (filterType === 'filler' && episode.isCanon) return false;
-    if (filterType === 'censored' && !episode.isCensored) return false;
+    // Si no hay filtros de tipo activos, mostrar todos
+    let passesTypeFilter = true;
+    if (filterType.length > 0) {
+      passesTypeFilter = filterType.some(filter => {
+        if (filter === 'canon') return episode.isCanon;
+        if (filter === 'filler') return !episode.isCanon;
+        if (filter === 'censored') return episode.isCensored;
+        return false;
+      });
+    }
 
-    return true;
+    return passesWatchedFilter && passesTypeFilter;
   });
 
   const handleToggleEpisode = (code: string, event: React.MouseEvent) => {
@@ -95,7 +128,7 @@ export default function SeasonDetail() {
     toggleWatched(code);
   };
 
-  const areFiltersActive = (filterWatched !== 'all' || filterType !== 'all')
+  const areFiltersActive = (filterWatched.length > 0 || filterType.length > 0);
 
   return (
     <div className={styles.container}>
@@ -161,75 +194,84 @@ export default function SeasonDetail() {
 
       {/* Filtros */}
       <div className={styles.filtersCard}>
-        <button className={`${styles.filterIconContainer} ${areFiltersActive && styles.filtersActive}`}
-          onClick={() => {
-            setFilterWatched('all');
-            setFilterType('all');
-          }}>
+        <button
+          className={`${styles.filterIconContainer} ${areFiltersActive && styles.filtersActive}`}
+          onClick={clearAllFilters}
+        >
           <span className={styles.filterIcon}>🔍</span>
           {areFiltersActive && (
-            <span className={styles.clearFiltersBubble}
-            >
-              ❌
-            </span>
+            <span className={styles.clearFiltersBubble}>✕</span>
           )}
         </button>
 
         <div className={styles.filtersContainer}>
           <div className={styles.filterGroup}>
-            <label className={styles.filterLabel}>Estado de visualización</label>
+            <label className={styles.filterLabel}>
+              Estado de visualización
+              {filterWatched.length > 0 && (
+                <span className={styles.filterCount}>({filterWatched.length})</span>
+              )}
+            </label>
             <div className={styles.filterButtons}>
               <button
-                onClick={() => setFilterWatched('all')}
-                className={`${styles.filterButton} ${filterWatched === 'all' ? styles.active : ''}`}
+                onClick={() => toggleFilterWatched('watched')}
+                className={`${styles.filterButton} ${filterWatched.includes('watched') ? styles.active : ''}`}
               >
-                Todos
-              </button>
-              <button
-                onClick={() => setFilterWatched('watched')}
-                className={`${styles.filterButton} ${filterWatched === 'watched' ? styles.active : ''}`}
-              >
+                {filterWatched.includes('watched') && <span className={styles.checkmark}>✓</span>}
                 👁️ Vistos
               </button>
               <button
-                onClick={() => setFilterWatched('unwatched')}
-                className={`${styles.filterButton} ${filterWatched === 'unwatched' ? styles.active : ''}`}
+                onClick={() => toggleFilterWatched('unwatched')}
+                className={`${styles.filterButton} ${filterWatched.includes('unwatched') ? styles.active : ''}`}
               >
+                {filterWatched.includes('unwatched') && <span className={styles.checkmark}>✓</span>}
                 🚫 No vistos
               </button>
             </div>
           </div>
 
           <div className={styles.filterGroup}>
-            <label className={styles.filterLabel}>Tipo de episodio</label>
+            <label className={styles.filterLabel}>
+              Tipo de episodio
+              {filterType.length > 0 && (
+                <span className={styles.filterCount}>({filterType.length})</span>
+              )}
+            </label>
             <div className={styles.filterButtons}>
               <button
-                onClick={() => setFilterType('canon')}
-                className={`${styles.filterButton} ${styles.canon} ${filterType === 'canon' ? styles.active : ''}`}
+                onClick={() => toggleFilterType('canon')}
+                className={`${styles.filterButton} ${styles.canon} ${filterType.includes('canon') ? styles.active : ''}`}
               >
+                {filterType.includes('canon') && <span className={styles.checkmark}>✓</span>}
                 Historia
               </button>
               <button
-                onClick={() => setFilterType('filler')}
-                className={`${styles.filterButton} ${styles.filler} ${filterType === 'filler' ? styles.active : ''}`}
+                onClick={() => toggleFilterType('filler')}
+                className={`${styles.filterButton} ${styles.filler} ${filterType.includes('filler') ? styles.active : ''}`}
               >
+                {filterType.includes('filler') && <span className={styles.checkmark}>✓</span>}
                 Relleno
               </button>
               <button
-                onClick={() => setFilterType('censored')}
-                className={`${styles.filterButton} ${styles.censored} ${filterType === 'censored' ? styles.active : ''}`}
+                onClick={() => toggleFilterType('censored')}
+                className={`${styles.filterButton} ${styles.censored} ${filterType.includes('censored') ? styles.active : ''}`}
               >
+                {filterType.includes('censored') && <span className={styles.checkmark}>✓</span>}
                 Censurado
               </button>
             </div>
           </div>
         </div>
-
       </div>
 
       {/* Contador de resultados */}
       <div className={styles.resultsCount}>
         Mostrando {filteredEpisodes.length} de {totalEpisodes} episodios
+        {areFiltersActive && (
+          <button onClick={clearAllFilters} className={styles.clearFiltersText}>
+            · Limpiar filtros
+          </button>
+        )}
       </div>
 
       {/* Lista de episodios */}
@@ -237,6 +279,9 @@ export default function SeasonDetail() {
         {filteredEpisodes.length === 0 ? (
           <div className={styles.noResults}>
             <p>No se encontraron episodios con los filtros seleccionados</p>
+            <button onClick={clearAllFilters} className={styles.clearFiltersButton}>
+              Limpiar filtros
+            </button>
           </div>
         ) : (
           filteredEpisodes

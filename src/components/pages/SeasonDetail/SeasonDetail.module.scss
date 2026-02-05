@@ -1,4 +1,5 @@
 @use "../../../styles/abstracts/neumorphism" as neu;
+@use "sass:color";
 
 .container {
   padding: 0;
@@ -163,27 +164,26 @@
 
 .filterIconContainer {
   position: relative;
-  background: var(--bg-secondary);
   width: 35px;
   height: 35px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid var(--bg-primary);
-  @include neu.neu-card(#ecf1f6, 50%, 2%, 1%);
 
-
-  &:hover>.clearFiltersBubble {
-    transform: translateY(-2px);
-  }
+  border-radius: 50%;
+  @include neu.neu-card(#ecf1f6);
 }
 
 .filtersActive {
-  transition: border var(--transition-speed);
+  @include neu.neu-button();
 
   &:hover {
-    border: 2px solid var(--danger-bg);
     cursor: pointer;
+    @include neu.neu-button-hover();
+  }
+
+  &:active {
+    @include neu.neu-button-active();
   }
 }
 
@@ -236,7 +236,6 @@
 }
 
 .filterButton {
-  @include neu.neu-card(#ecf1f6);
   padding: 0.625rem 1.25rem;
   border-radius: 12px;
   border: none;
@@ -248,12 +247,20 @@
   transition: all 0.2s ease;
   white-space: nowrap;
 
+  @include neu.neu-button();
+
   &:hover {
-    @include neu.neu-pressed(#ecf1f6);
+    cursor: pointer;
+    @include neu.neu-button-hover();
+  }
+
+  &:active {
+
+    @include neu.neu-inset(#ecf1f6, 16px, 2px);
   }
 
   &.active {
-    @include neu.neu-pressed(#ecf1f6);
+    @include neu.neu-inset(#ecf1f6, 16px, 2px);
     color: var(--accent-primary);
     font-weight: 600;
   }
@@ -271,7 +278,52 @@
   }
 }
 
+.checkmark {
+  margin-right: 0.5rem;
+  font-weight: bold;
+  color: var(--accent-primary);
+}
 
+.filterCount {
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--accent-primary);
+  font-weight: 700;
+}
+
+.clearFiltersText {
+  background: none;
+  border: none;
+  color: var(--danger-text);
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 0.5rem;
+  text-decoration: underline;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+.clearFiltersButton {
+  @include neu.neu-button();
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  border: none;
+  background: var(--danger-bg);
+  color: var(--danger-text);
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    @include neu.neu-button-hover();
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+}
 
 // Contador de resultados
 .resultsCount {
@@ -290,16 +342,36 @@
 }
 
 .episodeCard {
-  @include neu.neu-card(#ecf1f6);
   padding: 1.25rem;
-  border-radius: 16px;
+  border-radius: 18px;
   display: flex;
   align-items: center;
   gap: 1.25rem;
-  transition: all 0.2s ease;
+
+  transition:
+    box-shadow 0.2s ease,
+    background 0.2s ease,
+    transform 0.15s ease;
+
+  // 🔹 NO VISTO (default)
+  @include neu.neu-card(#ecf1f6, 18px, 3%, -2%, 22px);
+  background: linear-gradient(360deg,
+      color.adjust(#08b7da, $lightness: 2%),
+      color.adjust(#00ff95, $lightness: -2%));
+  @include neu.neu-card-gradient(18px, 3%, -2%, 22px);
+
+  box-shadow:
+    inset 4px 4px 8px rgba(163, 177, 198, 0.35),
+    inset -4px -4px 8px rgba(255, 255, 255, 0.9);
+
+  outline: 4px solid rgba(255, 255, 255);
+  outline-offset: -1px;
 
   &.watched {
-    border-left: 4px solid var(--success-text);
+    // 🔹 VISTO
+    @include neu.neu-card(#ecf1f6, 18px, 3%, -2%, 22px);
+
+    transform: none;
   }
 
   @media (max-width: 768px) {
@@ -313,7 +385,6 @@
   min-height: 50px;
   width: 50px;
   height: 50px;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -321,6 +392,8 @@
   font-weight: 700;
   color: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  outline: solid 4px #ffffff;
+  @include neu.neu-card(#ecf1f6, 9px, 3%, -2%, 22px);
 
   @media (max-width: 768px) {
     min-width: 45px;
@@ -378,31 +451,41 @@
 }
 
 .watchButton {
-  @include neu.neu-card(#ecf1f6);
   min-width: 40px;
   width: 40px;
   height: 40px;
   border-radius: 50%;
   border: none;
-  background: var(--bg-secondary);
   color: var(--text-secondary);
   font-size: 1.25rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+
+  transition: all 500ms ease;
+  @include neu.neu-card(#ecf1f6);
 
   &:hover {
-    @include neu.neu-pressed(#ecf1f6);
     transform: scale(1.05);
   }
 
+  &:active {
+    @include neu.neu-inset(#ecf1f6, 50%, 6px);
+  }
+
   &.watched {
-    @include neu.neu-pressed(#ecf1f6);
     color: var(--success-text);
     font-weight: bold;
   }
+}
+
+.episodeCard.watched .watchLink {
+  background: #ffffff;
+
+  box-shadow:
+    2px 2px 6px rgba(163, 177, 198, 0.35),
+    -2px -2px 6px rgba(255, 255, 255, 0.9);
 }
 
 .watchLink {
