@@ -95,6 +95,8 @@ export default function SeasonDetail() {
     toggleWatched(code);
   };
 
+  const areFiltersActive = (filterWatched !== 'all' || filterType !== 'all')
+
   return (
     <div className={styles.container}>
       {/* Header con botón de volver */}
@@ -159,68 +161,70 @@ export default function SeasonDetail() {
 
       {/* Filtros */}
       <div className={styles.filtersCard}>
-        <div className={styles.filterIcon}>🔍</div>
-        <h3>Filtros</h3>
+        <button className={`${styles.filterIconContainer} ${areFiltersActive && styles.filtersActive}`}
+          onClick={() => {
+            setFilterWatched('all');
+            setFilterType('all');
+          }}>
+          <span className={styles.filterIcon}>🔍</span>
+          {areFiltersActive && (
+            <span className={styles.clearFiltersBubble}
+            >
+              ❌
+            </span>
+          )}
+        </button>
 
-        <div className={styles.filterGroup}>
-          <label className={styles.filterLabel}>Estado de visualización</label>
-          <div className={styles.filterButtons}>
-            <button
-              onClick={() => setFilterWatched('all')}
-              className={`${styles.filterButton} ${filterWatched === 'all' ? styles.active : ''}`}
-            >
-              Todos
-            </button>
-            <button
-              onClick={() => setFilterWatched('watched')}
-              className={`${styles.filterButton} ${filterWatched === 'watched' ? styles.active : ''}`}
-            >
-              👁️ Vistos
-            </button>
-            <button
-              onClick={() => setFilterWatched('unwatched')}
-              className={`${styles.filterButton} ${filterWatched === 'unwatched' ? styles.active : ''}`}
-            >
-              🚫 No vistos
-            </button>
+        <div className={styles.filtersContainer}>
+          <div className={styles.filterGroup}>
+            <label className={styles.filterLabel}>Estado de visualización</label>
+            <div className={styles.filterButtons}>
+              <button
+                onClick={() => setFilterWatched('all')}
+                className={`${styles.filterButton} ${filterWatched === 'all' ? styles.active : ''}`}
+              >
+                Todos
+              </button>
+              <button
+                onClick={() => setFilterWatched('watched')}
+                className={`${styles.filterButton} ${filterWatched === 'watched' ? styles.active : ''}`}
+              >
+                👁️ Vistos
+              </button>
+              <button
+                onClick={() => setFilterWatched('unwatched')}
+                className={`${styles.filterButton} ${filterWatched === 'unwatched' ? styles.active : ''}`}
+              >
+                🚫 No vistos
+              </button>
+            </div>
+          </div>
+
+          <div className={styles.filterGroup}>
+            <label className={styles.filterLabel}>Tipo de episodio</label>
+            <div className={styles.filterButtons}>
+              <button
+                onClick={() => setFilterType('canon')}
+                className={`${styles.filterButton} ${styles.canon} ${filterType === 'canon' ? styles.active : ''}`}
+              >
+                Historia
+              </button>
+              <button
+                onClick={() => setFilterType('filler')}
+                className={`${styles.filterButton} ${styles.filler} ${filterType === 'filler' ? styles.active : ''}`}
+              >
+                Relleno
+              </button>
+              <button
+                onClick={() => setFilterType('censored')}
+                className={`${styles.filterButton} ${styles.censored} ${filterType === 'censored' ? styles.active : ''}`}
+              >
+                Censurado
+              </button>
+            </div>
           </div>
         </div>
 
-        <div className={styles.filterGroup}>
-          <label className={styles.filterLabel}>Tipo de episodio</label>
-          <div className={styles.filterButtons}>
-            <button
-              onClick={() => setFilterType('canon')}
-              className={`${styles.filterButton} ${styles.canon} ${filterType === 'canon' ? styles.active : ''}`}
-            >
-              Historia
-            </button>
-            <button
-              onClick={() => setFilterType('filler')}
-              className={`${styles.filterButton} ${styles.filler} ${filterType === 'filler' ? styles.active : ''}`}
-            >
-              Relleno
-            </button>
-            <button
-              onClick={() => setFilterType('censored')}
-              className={`${styles.filterButton} ${styles.censored} ${filterType === 'censored' ? styles.active : ''}`}
-            >
-              Censurado
-            </button>
-          </div>
-        </div>
-
-        {(filterWatched !== 'all' || filterType !== 'all') && (
-          <button
-            onClick={() => {
-              setFilterWatched('all');
-              setFilterType('all');
-            }}
-            className={styles.clearFilters}
-          >
-            Limpiar filtros
-          </button>
-        )}
       </div>
 
       {/* Contador de resultados */}

@@ -17,9 +17,6 @@ export default function Navbar() {
                 </Link>
 
                 <div className={styles.navActions}>
-                    <Link to="/" className={styles.homeButton}>
-                        🏠 Inicio
-                    </Link>
                     <ThemeToggle />
                 </div>
             </div>

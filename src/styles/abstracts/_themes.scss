@@ -1,8 +1,7 @@
 // Tema Claro (TCG Pocket Style)
 [data-theme='light'] {
+  --bg-glass: rgba(255, 255, 255, 0.3);
   // Gradientes de fondo
-  // --bg-gradient-1: linear-gradient(135deg, #e8eef7 0%, #fce4ec 100%);
-  // --bg-gradient-1: #f7f8fa;
   --bg-gradient-1: #ecf1f6;
   --shadow-light: rgba(255, 255, 255, 0.6);
   --shadow-dark: rgba(163, 177, 198, 0.35);

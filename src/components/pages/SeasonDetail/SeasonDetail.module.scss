@@ -79,9 +79,8 @@
 }
 
 .statCard {
-  @include neu.neu-card(#ecf1f6);
+  @include neu.neu-inset(#ecf1f6, 16px, 2px);
   padding: 1.25rem;
-  border-radius: 16px;
   text-align: center;
   transition: transform 0.2s ease;
 
@@ -134,64 +133,99 @@
 }
 
 .progressBar {
-  @include neu.neu-pressed(#ecf1f6);
   height: 12px;
   border-radius: 10px;
   overflow: hidden;
+
+  box-shadow:
+    2px 2px 4px rgba(163, 177, 198, 0.4),
+    -2px -2px 4px rgba(255, 255, 255, 0.6);
 }
 
 .progressFill {
   height: 100%;
   border-radius: 10px;
   transition: width 0.3s ease;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+
 }
 
 // Filtros
 .filtersCard {
-  @include neu.neu-card(#ecf1f6);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: relative;
   padding: 1.5rem;
   border-radius: 20px;
   margin-bottom: 2rem;
-  position: relative;
-}
-
-.filterIcon {
-  position: absolute;
-  top: -15px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 2rem;
-  background: var(--bg-secondary);
-  width: 50px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
   @include neu.neu-card(#ecf1f6);
 }
 
-.filtersCard h3 {
-  text-align: center;
-  margin: 0.5rem 0 1.5rem 0;
-  color: var(--text-primary);
-  font-size: 1.2rem;
+.filterIconContainer {
+  position: relative;
+  background: var(--bg-secondary);
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--bg-primary);
+  @include neu.neu-card(#ecf1f6, 50%, 2%, 1%);
+
+
+  &:hover>.clearFiltersBubble {
+    transform: translateY(-2px);
+  }
+}
+
+.filtersActive {
+  transition: border var(--transition-speed);
+
+  &:hover {
+    border: 2px solid var(--danger-bg);
+    cursor: pointer;
+  }
+}
+
+.filterIcon {
+  font-size: 1rem;
+}
+
+.clearFiltersBubble {
+  position: absolute;
+  right: -3px;
+  top: -3px;
+  width: 15px;
+  height: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 7px;
+  @include neu.neu-card(#ecf1f6, 50%);
+  background: var(--danger-bg);
+  transition: all var(--transition-speed) ease;
+}
+
+.filtersContainer {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
 }
 
 .filterGroup {
-  margin-bottom: 1.5rem;
-
-  &:last-of-type {
-    margin-bottom: 0;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  min-width: 150px;
 }
 
 .filterLabel {
   display: block;
   font-size: 0.875rem;
   color: var(--text-secondary);
-  margin-bottom: 0.875rem;
   font-weight: 500;
 }
 
@@ -237,24 +271,7 @@
   }
 }
 
-.clearFilters {
-  @include neu.neu-card(#ecf1f6);
-  width: 100%;
-  padding: 0.875rem;
-  border-radius: 12px;
-  border: none;
-  background: var(--danger-bg);
-  color: var(--danger-text);
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 1rem;
-  transition: all 0.2s ease;
 
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-}
 
 // Contador de resultados
 .resultsCount {
@@ -281,10 +298,6 @@
   gap: 1.25rem;
   transition: all 0.2s ease;
 
-  &:hover {
-    @include neu.neu-pressed(#ecf1f6);
-  }
-
   &.watched {
     border-left: 4px solid var(--success-text);
   }
@@ -296,7 +309,6 @@
 }
 
 .episodeNumber {
-  @include neu.neu-card(#ecf1f6);
   min-width: 50px;
   min-height: 50px;
   width: 50px;

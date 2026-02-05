@@ -1,7 +1,7 @@
 @use "../../../styles/abstracts/neumorphism" as neu;
 
 .container {
-    padding: 2rem 0;
+    padding: 0;
 }
 
 .header {
@@ -129,7 +129,7 @@
 }
 
 .stat {
-    @include neu.neu-card(#ecf1f6);
+    @include neu.neu-inset(#ecf1f6, 16px, 2px);
     padding: 1rem;
     border-radius: 12px;
     text-align: center;
