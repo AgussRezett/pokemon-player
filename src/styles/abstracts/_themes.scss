@@ -1,13 +1,25 @@
+@use 'sass:color';
+
 // Tema Claro (TCG Pocket Style)
 [data-theme='light'] {
+  $bg-base: #ecf1f6;
+
+  --bg: #{$bg-base};
+  --bg-light: #{color.adjust($bg-base, $lightness: 3%)};
+  --bg-dark: #{color.adjust($bg-base, $lightness: -2%)};
+
+  --light: rgba(255, 255, 255, 0.6);
+  --dark: rgba(163, 177, 198, 0.45);
+
   --bg-glass: rgba(255, 255, 255, 0.3);
   // Gradientes de fondo
   --bg-gradient-1: #ecf1f6;
   --shadow-light: rgba(255, 255, 255, 0.6);
+  --shadow-light-hover: rgba(255, 255, 255, 1);
+  --shadow-light-active: rgba(255, 255, 255, 0.9);
   --shadow-dark: rgba(163, 177, 198, 0.35);
-
-  --light: rgba(255, 255, 255, 0.6);
-  --dark: rgba(163, 177, 198, 0.65);
+  --shadow-dark-hover: rgba(163, 177, 198, 0.7);
+  --shadow-dark-active: rgba(163, 177, 198, 0.6);
 
   // Backgrounds principales
   --bg-primary: #ecf1f6;
@@ -39,10 +51,21 @@
 
 // Tema Oscuro (TCG Pocket Dark Style)
 [data-theme='dark'] {
+  $bg-base: #1e2228;
+
+  --bg: #{$bg-base};
+  --bg-light: #{color.adjust($bg-base, $lightness: 3%)};
+  --bg-dark: #{color.adjust($bg-base, $lightness: -2%)};
+
   // Gradientes de fondo
   --bg-gradient-1: #202023;
   --shadow-light: rgba(40, 40, 40, 0.6);
+
+  --shadow-light-hover: rgba(40, 40, 40, 1);
+  --shadow-light-active: rgba(40, 40, 40, 0.9);
   --shadow-dark: rgba(13, 13, 13, 0.35);
+  --shadow-dark-hover: rgba(13, 13, 13, 0.7);
+  --shadow-dark-active: rgba(13, 13, 13, 0.6);
 
   // Backgrounds principales
   --bg-primary: #202023;

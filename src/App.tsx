@@ -13,7 +13,10 @@ function App() {
           <Route path="/" element={<Layout />}>
             <Route index element={<SeasonSelector />} />
             <Route path="season/:seasonNumber" element={<SeasonDetail />} />
-            <Route path="season/:seasonNumber/episode/:episodeNumber" element={<EpisodePlayer />} />
+            <Route
+              path="season/:seasonNumber/episode/:episodeNumber"
+              element={<EpisodePlayer />}
+            />
           </Route>
         </Routes>
       </BrowserRouter>

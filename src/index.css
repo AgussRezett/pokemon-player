@@ -15,7 +15,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background: var(--bg-gradient-1);
   color: var(--text-primary);
-  transition: background var(--transition-speed) ease,
+  transition:
+    background var(--transition-speed) ease,
     color var(--transition-speed) ease;
   min-height: 100vh;
 }
@@ -44,7 +45,6 @@ button {
 }
 
 @keyframes float {
-
   0%,
   100% {
     transform: translateY(0px);
@@ -66,15 +66,16 @@ button {
 }
 
 @keyframes glow {
-
   0%,
   100% {
-    box-shadow: 0 0 5px var(--color-primary),
+    box-shadow:
+      0 0 5px var(--color-primary),
       0 0 10px var(--color-primary);
   }
 
   50% {
-    box-shadow: 0 0 10px var(--color-primary),
+    box-shadow:
+      0 0 10px var(--color-primary),
       0 0 20px var(--color-primary),
       0 0 30px var(--color-primary);
   }

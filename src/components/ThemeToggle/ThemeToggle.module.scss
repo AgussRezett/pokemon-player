@@ -1,4 +1,4 @@
-@use "../../styles/abstracts/neumorphism" as neu;
+@use '../../styles/abstracts/neumorphism' as neu;
 
 .themeToggle {
   display: flex;
@@ -12,11 +12,11 @@
   @include neu.neu-button();
 
   &:hover {
-    @include neu.neu-button-hover()
+    @include neu.neu-button-hover();
   }
 
   &:active {
-    @include neu.neu-button-active()
+    @include neu.neu-button-active();
   }
 
   .icon {
@@ -24,6 +24,5 @@
     display: flex;
     align-items: center;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-    animation: float 3s ease-in-out infinite;
   }
 }

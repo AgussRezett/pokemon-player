@@ -1,5 +1,5 @@
-@use "../../../styles/abstracts/neumorphism" as neu;
-@use "sass:color";
+@use '../../../styles/abstracts/neumorphism' as neu;
+@use 'sass:color';
 
 .container {
   padding: 0;
@@ -16,7 +16,7 @@
 }
 
 .backLink {
-  @include neu.neu-card(#ecf1f6);
+  @include neu.neu-card();
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -28,13 +28,13 @@
   transition: all 0.2s ease;
 
   &:hover {
-    @include neu.neu-pressed(#ecf1f6)
+    @include neu.neu-pressed(#ecf1f6);
   }
 }
 
 // Card de temporada
 .seasonCard {
-  @include neu.neu-card(#ecf1f6);
+  @include neu.neu-card();
   padding: 2rem;
   border-radius: 20px;
   margin-bottom: 2rem;
@@ -147,7 +147,6 @@
   height: 100%;
   border-radius: 10px;
   transition: width 0.3s ease;
-
 }
 
 // Filtros
@@ -159,7 +158,7 @@
   padding: 1.5rem;
   border-radius: 20px;
   margin-bottom: 2rem;
-  @include neu.neu-card(#ecf1f6);
+  @include neu.neu-card();
 }
 
 .filterIconContainer {
@@ -171,7 +170,7 @@
   justify-content: center;
 
   border-radius: 50%;
-  @include neu.neu-card(#ecf1f6);
+  @include neu.neu-card();
 }
 
 .filtersActive {
@@ -201,7 +200,7 @@
   align-items: center;
   justify-content: center;
   font-size: 7px;
-  @include neu.neu-card(#ecf1f6, 50%);
+  @include neu.neu-card(50%);
   background: var(--danger-bg);
   transition: all var(--transition-speed) ease;
 }
@@ -255,7 +254,6 @@
   }
 
   &:active {
-
     @include neu.neu-inset(#ecf1f6, 16px, 2px);
   }
 
@@ -354,10 +352,12 @@
     transform 0.15s ease;
 
   // 🔹 NO VISTO (default)
-  @include neu.neu-card(#ecf1f6, 18px, 3%, -2%, 22px);
-  background: linear-gradient(360deg,
-      color.adjust(#08b7da, $lightness: 2%),
-      color.adjust(#00ff95, $lightness: -2%));
+  @include neu.neu-card(18px, 22px);
+  background: linear-gradient(
+    360deg,
+    color.adjust(#08b7da, $lightness: 2%),
+    color.adjust(#00ff95, $lightness: -2%)
+  );
   @include neu.neu-card-gradient(18px, 3%, -2%, 22px);
 
   box-shadow:
@@ -369,7 +369,7 @@
 
   &.watched {
     // 🔹 VISTO
-    @include neu.neu-card(#ecf1f6, 18px, 3%, -2%, 22px);
+    @include neu.neu-card(18px, 22px);
 
     transform: none;
   }
@@ -393,7 +393,7 @@
   color: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   outline: solid 4px #ffffff;
-  @include neu.neu-card(#ecf1f6, 9px, 3%, -2%, 22px);
+  @include neu.neu-card(9px, 22px);
 
   @media (max-width: 768px) {
     min-width: 45px;
@@ -464,7 +464,7 @@
   justify-content: center;
 
   transition: all 500ms ease;
-  @include neu.neu-card(#ecf1f6);
+  @include neu.neu-card();
 
   &:hover {
     transform: scale(1.05);
@@ -489,7 +489,7 @@
 }
 
 .watchLink {
-  @include neu.neu-card(#ecf1f6);
+  @include neu.neu-card();
   padding: 0.625rem 1.25rem;
   border-radius: 12px;
   text-decoration: none;
@@ -510,7 +510,7 @@
 }
 
 .noResults {
-  @include neu.neu-card(#ecf1f6);
+  @include neu.neu-card();
   padding: 3rem 2rem;
   border-radius: 16px;
   text-align: center;
@@ -559,7 +559,7 @@
 }
 
 .backButton {
-  @include neu.neu-card(#ecf1f6);
+  @include neu.neu-card();
   padding: 0.875rem 1.5rem;
   border-radius: 12px;
   text-decoration: none;

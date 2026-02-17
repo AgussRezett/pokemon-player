@@ -5,11 +5,16 @@ import { useEpisodeStore } from '../../../store/episodeStore';
 
 export default function SeasonDetail() {
   const { seasonNumber } = useParams<{ seasonNumber: string }>();
-  const { episodes, loading, fetchEpisodes, isWatched, toggleWatched } = useEpisodeStore();
+  const { episodes, loading, fetchEpisodes, isWatched, toggleWatched } =
+    useEpisodeStore();
 
   // Cambiar a arrays para permitir múltiples selecciones
-  const [filterWatched, setFilterWatched] = useState<('watched' | 'unwatched')[]>([]);
-  const [filterType, setFilterType] = useState<('canon' | 'filler' | 'censored')[]>([]);
+  const [filterWatched, setFilterWatched] = useState<
+    ('watched' | 'unwatched')[]
+  >([]);
+  const [filterType, setFilterType] = useState<
+    ('canon' | 'filler' | 'censored')[]
+  >([]);
 
   const season = seasonNumber ? parseInt(seasonNumber, 10) : null;
 
@@ -30,12 +35,14 @@ export default function SeasonDetail() {
       <div className={styles.errorContainer}>
         <h2>Error</h2>
         <p>Temporada no válida</p>
-        <Link to="/" className={styles.backButton}>Volver a temporadas</Link>
+        <Link to="/" className={styles.backButton}>
+          Volver a temporadas
+        </Link>
       </div>
     );
   }
 
-  const seasonEpisodes = episodes.filter(ep => ep.season === season);
+  const seasonEpisodes = episodes.filter((ep) => ep.season === season);
 
   if (loading || seasonEpisodes.length === 0) {
     return (
@@ -48,9 +55,9 @@ export default function SeasonDetail() {
 
   // Estadísticas
   const totalEpisodes = seasonEpisodes.length;
-  const watchedCount = seasonEpisodes.filter(ep => isWatched(ep.code)).length;
-  const canonCount = seasonEpisodes.filter(ep => ep.isCanon).length;
-  const fillerCount = seasonEpisodes.filter(ep => !ep.isCanon).length;
+  const watchedCount = seasonEpisodes.filter((ep) => isWatched(ep.code)).length;
+  const canonCount = seasonEpisodes.filter((ep) => ep.isCanon).length;
+  const fillerCount = seasonEpisodes.filter((ep) => !ep.isCanon).length;
   const progress = Math.round((watchedCount / totalEpisodes) * 100);
 
   // Nombres de temporadas
@@ -68,24 +75,30 @@ export default function SeasonDetail() {
 
   // Colores por temporada
   const seasonColors = [
-    '#FF6B6B', '#FFB84D', '#FFD93D', '#6BCF7F',
-    '#4ECDC4', '#5271FF', '#9B59B6', '#E91E63'
+    '#FF6B6B',
+    '#FFB84D',
+    '#FFD93D',
+    '#6BCF7F',
+    '#4ECDC4',
+    '#5271FF',
+    '#9B59B6',
+    '#E91E63',
   ];
   const seasonColor = seasonColors[(season - 1) % seasonColors.length];
 
   // Funciones de toggle para filtros tipo checkbox
   const toggleFilterWatched = (filter: 'watched' | 'unwatched') => {
-    setFilterWatched(prev =>
+    setFilterWatched((prev) =>
       prev.includes(filter)
-        ? prev.filter(f => f !== filter)
+        ? prev.filter((f) => f !== filter)
         : [...prev, filter]
     );
   };
 
   const toggleFilterType = (filter: 'canon' | 'filler' | 'censored') => {
-    setFilterType(prev =>
+    setFilterType((prev) =>
       prev.includes(filter)
-        ? prev.filter(f => f !== filter)
+        ? prev.filter((f) => f !== filter)
         : [...prev, filter]
     );
   };
@@ -97,11 +110,11 @@ export default function SeasonDetail() {
   };
 
   // Filtrar episodios con lógica OR (mostrar si cumple CUALQUIERA de los filtros activos)
-  const filteredEpisodes = seasonEpisodes.filter(episode => {
+  const filteredEpisodes = seasonEpisodes.filter((episode) => {
     // Si no hay filtros de visto/no visto activos, mostrar todos
     let passesWatchedFilter = true;
     if (filterWatched.length > 0) {
-      passesWatchedFilter = filterWatched.some(filter => {
+      passesWatchedFilter = filterWatched.some((filter) => {
         if (filter === 'watched') return isWatched(episode.code);
         if (filter === 'unwatched') return !isWatched(episode.code);
         return false;
@@ -111,7 +124,7 @@ export default function SeasonDetail() {
     // Si no hay filtros de tipo activos, mostrar todos
     let passesTypeFilter = true;
     if (filterType.length > 0) {
-      passesTypeFilter = filterType.some(filter => {
+      passesTypeFilter = filterType.some((filter) => {
         if (filter === 'canon') return episode.isCanon;
         if (filter === 'filler') return !episode.isCanon;
         if (filter === 'censored') return episode.isCensored;
@@ -128,7 +141,7 @@ export default function SeasonDetail() {
     toggleWatched(code);
   };
 
-  const areFiltersActive = (filterWatched.length > 0 || filterType.length > 0);
+  const areFiltersActive = filterWatched.length > 0 || filterType.length > 0;
 
   return (
     <div className={styles.container}>
@@ -160,7 +173,9 @@ export default function SeasonDetail() {
 
           <div className={styles.statCard}>
             <span className={styles.statLabel}>Faltantes</span>
-            <span className={styles.statValue}>{totalEpisodes - watchedCount}</span>
+            <span className={styles.statValue}>
+              {totalEpisodes - watchedCount}
+            </span>
           </div>
 
           <div className={styles.statCard}>
@@ -185,7 +200,7 @@ export default function SeasonDetail() {
               className={styles.progressFill}
               style={{
                 width: `${progress}%`,
-                background: seasonColor
+                background: seasonColor,
               }}
             />
           </div>
@@ -209,7 +224,9 @@ export default function SeasonDetail() {
             <label className={styles.filterLabel}>
               Estado de visualización
               {filterWatched.length > 0 && (
-                <span className={styles.filterCount}>({filterWatched.length})</span>
+                <span className={styles.filterCount}>
+                  ({filterWatched.length})
+                </span>
               )}
             </label>
             <div className={styles.filterButtons}>
@@ -217,14 +234,18 @@ export default function SeasonDetail() {
                 onClick={() => toggleFilterWatched('watched')}
                 className={`${styles.filterButton} ${filterWatched.includes('watched') ? styles.active : ''}`}
               >
-                {filterWatched.includes('watched') && <span className={styles.checkmark}>✓</span>}
+                {filterWatched.includes('watched') && (
+                  <span className={styles.checkmark}>✓</span>
+                )}
                 👁️ Vistos
               </button>
               <button
                 onClick={() => toggleFilterWatched('unwatched')}
                 className={`${styles.filterButton} ${filterWatched.includes('unwatched') ? styles.active : ''}`}
               >
-                {filterWatched.includes('unwatched') && <span className={styles.checkmark}>✓</span>}
+                {filterWatched.includes('unwatched') && (
+                  <span className={styles.checkmark}>✓</span>
+                )}
                 🚫 No vistos
               </button>
             </div>
@@ -234,7 +255,9 @@ export default function SeasonDetail() {
             <label className={styles.filterLabel}>
               Tipo de episodio
               {filterType.length > 0 && (
-                <span className={styles.filterCount}>({filterType.length})</span>
+                <span className={styles.filterCount}>
+                  ({filterType.length})
+                </span>
               )}
             </label>
             <div className={styles.filterButtons}>
@@ -242,21 +265,27 @@ export default function SeasonDetail() {
                 onClick={() => toggleFilterType('canon')}
                 className={`${styles.filterButton} ${styles.canon} ${filterType.includes('canon') ? styles.active : ''}`}
               >
-                {filterType.includes('canon') && <span className={styles.checkmark}>✓</span>}
+                {filterType.includes('canon') && (
+                  <span className={styles.checkmark}>✓</span>
+                )}
                 Historia
               </button>
               <button
                 onClick={() => toggleFilterType('filler')}
                 className={`${styles.filterButton} ${styles.filler} ${filterType.includes('filler') ? styles.active : ''}`}
               >
-                {filterType.includes('filler') && <span className={styles.checkmark}>✓</span>}
+                {filterType.includes('filler') && (
+                  <span className={styles.checkmark}>✓</span>
+                )}
                 Relleno
               </button>
               <button
                 onClick={() => toggleFilterType('censored')}
                 className={`${styles.filterButton} ${styles.censored} ${filterType.includes('censored') ? styles.active : ''}`}
               >
-                {filterType.includes('censored') && <span className={styles.checkmark}>✓</span>}
+                {filterType.includes('censored') && (
+                  <span className={styles.checkmark}>✓</span>
+                )}
                 Censurado
               </button>
             </div>
@@ -279,7 +308,10 @@ export default function SeasonDetail() {
         {filteredEpisodes.length === 0 ? (
           <div className={styles.noResults}>
             <p>No se encontraron episodios con los filtros seleccionados</p>
-            <button onClick={clearAllFilters} className={styles.clearFiltersButton}>
+            <button
+              onClick={clearAllFilters}
+              className={styles.clearFiltersButton}
+            >
               Limpiar filtros
             </button>
           </div>
@@ -316,7 +348,9 @@ export default function SeasonDetail() {
                       </span>
 
                       {episode.isCensored && (
-                        <span className={`${styles.badge} ${styles.badgeCensored}`}>
+                        <span
+                          className={`${styles.badge} ${styles.badgeCensored}`}
+                        >
                           🚫 Censurado
                         </span>
                       )}
@@ -327,7 +361,9 @@ export default function SeasonDetail() {
                   <button
                     onClick={(e) => handleToggleEpisode(episode.code, e)}
                     className={`${styles.watchButton} ${watched ? styles.watched : ''}`}
-                    title={watched ? 'Marcar como no visto' : 'Marcar como visto'}
+                    title={
+                      watched ? 'Marcar como no visto' : 'Marcar como visto'
+                    }
                   >
                     {watched ? '✓' : '○'}
                   </button>

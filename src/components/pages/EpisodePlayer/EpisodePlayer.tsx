@@ -4,16 +4,26 @@ import styles from './EpisodePlayer.module.scss';
 import { useEpisodeStore } from '../../../store/episodeStore';
 
 export default function EpisodePlayer() {
-  const { seasonNumber, episodeNumber } = useParams<{ seasonNumber: string; episodeNumber: string }>();
+  const { seasonNumber, episodeNumber } = useParams<{
+    seasonNumber: string;
+    episodeNumber: string;
+  }>();
   const navigate = useNavigate();
-  const { episodes, fetchEpisodes, getEpisodeBySeasonAndNumber, markAsWatched, isWatched } = useEpisodeStore();
+  const {
+    episodes,
+    fetchEpisodes,
+    getEpisodeBySeasonAndNumber,
+    markAsWatched,
+    isWatched,
+  } = useEpisodeStore();
 
   const season = seasonNumber ? parseInt(seasonNumber, 10) : null;
   const episodeNum = episodeNumber ? parseInt(episodeNumber, 10) : null;
 
-  const episode = season !== null && episodeNum !== null
-    ? getEpisodeBySeasonAndNumber(season, episodeNum)
-    : null;
+  const episode =
+    season !== null && episodeNum !== null
+      ? getEpisodeBySeasonAndNumber(season, episodeNum)
+      : null;
 
   const watched = episode ? isWatched(episode.code) : false;
 
@@ -27,7 +37,9 @@ export default function EpisodePlayer() {
     if (episode) {
       const capitalizedName = episode.name
         .split(' ')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .map(
+          (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+        )
         .join(' ');
 
       document.title = `Temporada ${episode.season} Episodio ${episode.episode}: ${capitalizedName} | Pokémon Tracker`;
@@ -51,17 +63,31 @@ export default function EpisodePlayer() {
   }, [episode, watched, markAsWatched]);
 
   // Encontrar episodios anterior y siguiente
-  const seasonEpisodes = episodes.filter(ep => ep.season === season);
-  const currentIndex = episode ? seasonEpisodes.findIndex(ep => ep.code === episode.code) : -1;
-  const previousEpisode = currentIndex > 0 ? seasonEpisodes[currentIndex - 1] : null;
-  const nextEpisode = currentIndex >= 0 && currentIndex < seasonEpisodes.length - 1 ? seasonEpisodes[currentIndex + 1] : null;
+  const seasonEpisodes = episodes.filter((ep) => ep.season === season);
+  const currentIndex = episode
+    ? seasonEpisodes.findIndex((ep) => ep.code === episode.code)
+    : -1;
+  const previousEpisode =
+    currentIndex > 0 ? seasonEpisodes[currentIndex - 1] : null;
+  const nextEpisode =
+    currentIndex >= 0 && currentIndex < seasonEpisodes.length - 1
+      ? seasonEpisodes[currentIndex + 1]
+      : null;
 
   // Colores por temporada
   const seasonColors = [
-    '#FF6B6B', '#FFB84D', '#FFD93D', '#6BCF7F',
-    '#4ECDC4', '#5271FF', '#9B59B6', '#E91E63'
+    '#FF6B6B',
+    '#FFB84D',
+    '#FFD93D',
+    '#6BCF7F',
+    '#4ECDC4',
+    '#5271FF',
+    '#9B59B6',
+    '#E91E63',
   ];
-  const seasonColor = season ? seasonColors[(season - 1) % seasonColors.length] : '#5271FF';
+  const seasonColor = season
+    ? seasonColors[(season - 1) % seasonColors.length]
+    : '#5271FF';
 
   // Nombres de temporadas
   const getSeasonName = (season: number) => {
@@ -89,8 +115,13 @@ export default function EpisodePlayer() {
     return (
       <div className={styles.errorContainer}>
         <h2>Error</h2>
-        <p>No se encontró el episodio (Temporada {season}, Episodio {episodeNum})</p>
-        <Link to={season ? `/season/${season}` : '/'} className={styles.backButton}>
+        <p>
+          No se encontró el episodio (Temporada {season}, Episodio {episodeNum})
+        </p>
+        <Link
+          to={season ? `/season/${season}` : '/'}
+          className={styles.backButton}
+        >
           Volver
         </Link>
       </div>
@@ -119,9 +150,7 @@ export default function EpisodePlayer() {
             <span className={styles.seasonBadge}>
               Temporada {episode.season} · {getSeasonName(episode.season)}
             </span>
-            <h1 className={styles.episodeTitle}>
-              Episodio {episode.episode}
-            </h1>
+            <h1 className={styles.episodeTitle}>Episodio {episode.episode}</h1>
           </div>
 
           {/* Badges de estado */}
@@ -129,7 +158,9 @@ export default function EpisodePlayer() {
             <span
               className={`${styles.badge} ${episode.isCanon ? styles.badgeCanon : styles.badgeFiller}`}
             >
-              {episode.isCanon ? '⚡ Episodio de Historia' : '🔄 Episodio de Relleno'}
+              {episode.isCanon
+                ? '⚡ Episodio de Historia'
+                : '🔄 Episodio de Relleno'}
             </span>
 
             {episode.isCensored && (
@@ -169,7 +200,10 @@ export default function EpisodePlayer() {
       {/* Navegación entre episodios */}
       <div className={styles.navigation}>
         <button
-          onClick={() => previousEpisode && navigate(`/season/${season}/episode/${previousEpisode.episode}`)}
+          onClick={() =>
+            previousEpisode &&
+            navigate(`/season/${season}/episode/${previousEpisode.episode}`)
+          }
           disabled={!previousEpisode}
           className={`${styles.navButton} ${styles.navPrev}`}
         >
@@ -191,7 +225,10 @@ export default function EpisodePlayer() {
         <div className={styles.navDivider}></div>
 
         <button
-          onClick={() => nextEpisode && navigate(`/season/${season}/episode/${nextEpisode.episode}`)}
+          onClick={() =>
+            nextEpisode &&
+            navigate(`/season/${season}/episode/${nextEpisode.episode}`)
+          }
           disabled={!nextEpisode}
           className={`${styles.navButton} ${styles.navNext}`}
         >

@@ -1,87 +1,85 @@
-@use "sass:color";
+@use 'sass:color';
 
-@mixin neu-card($bg,
-        $radius: 20px,
-        $lightness-top: 3%,
-        $lightness-bottom: -2%,
-        $shadow-blur: 20px) {
-        border-radius: $radius;
+@mixin neu-card($radius: 20px, $shadow-blur: 20px) {
+  border-radius: $radius;
 
-        background: linear-gradient(145deg,
-                        color.adjust($bg, $lightness: $lightness-top),
-                        color.adjust($bg, $lightness: $lightness-bottom));
+  background: linear-gradient(145deg, var(--bg-light), var(--bg-dark));
 
-        box-shadow:
-                5px 5px $shadow-blur var(--dark),
-                -5px -5px $shadow-blur var(--light),
-                inset 1px 1px 2px rgba(255, 255, 255, 0.6),
-                inset -1px -1px 2px rgba(163, 177, 198, 0.2);
+  box-shadow:
+    5px 5px $shadow-blur var(--dark),
+    -5px -5px $shadow-blur var(--light),
+    inset 1px 1px 2px rgba(255, 255, 255, 0.6),
+    inset -1px -1px 2px rgba(163, 177, 198, 0.2);
 }
 
-@mixin neu-card-gradient($radius: 20px,
-        $lightness-top: 3%,
-        $lightness-bottom: -2%,
-        $shadow-blur: 20px) {
-        border-radius: $radius;
+@mixin neu-card-gradient(
+  $radius: 20px,
+  $lightness-top: 3%,
+  $lightness-bottom: -2%,
+  $shadow-blur: 20px
+) {
+  border-radius: $radius;
 
-        box-shadow:
-                5px 5px $shadow-blur var(--dark),
-                -5px -5px $shadow-blur var(--light),
-                inset 1px 1px 2px rgba(255, 255, 255, 0.6),
-                inset -1px -1px 2px rgba(163, 177, 198, 0.2);
+  box-shadow:
+    5px 5px $shadow-blur var(--dark),
+    -5px -5px $shadow-blur var(--light),
+    inset 1px 1px 2px rgba(255, 255, 255, 0.6),
+    inset -1px -1px 2px rgba(163, 177, 198, 0.2);
 }
 
 @mixin neu-pressed($bg, $blur: 14px) {
-        background: linear-gradient(145deg,
-                        color.adjust($bg, $lightness: -2%),
-                        color.adjust($bg, $lightness: 2%));
+  background: linear-gradient(
+    145deg,
+    color.adjust($bg, $lightness: -2%),
+    color.adjust($bg, $lightness: 2%)
+  );
 
-        box-shadow:
-                inset 6px 6px $blur rgba(163, 177, 198, 0.4),
-                inset -6px -6px $blur rgba(255, 255, 255, 0.8);
+  box-shadow:
+    inset 6px 6px $blur rgba(163, 177, 198, 0.4),
+    inset -6px -6px $blur rgba(255, 255, 255, 0.8);
 }
 
+@mixin neu-inset(
+  $bg,
+  $radius: 16px,
+  $depth: 8px,
+  $lightness-top: -1%,
+  $lightness-bottom: 1%
+) {
+  border-radius: $radius;
 
+  background: linear-gradient(
+    145deg,
+    color.adjust($bg, $lightness: $lightness-top),
+    color.adjust($bg, $lightness: $lightness-bottom)
+  );
 
-@mixin neu-inset($bg,
-        $radius: 16px,
-        $depth: 8px,
-        $lightness-top: -1%,
-        $lightness-bottom: 1%) {
-        border-radius: $radius;
-
-        background: linear-gradient(145deg,
-                        color.adjust($bg, $lightness: $lightness-top),
-                        color.adjust($bg, $lightness: $lightness-bottom));
-
-        box-shadow:
-                inset $depth $depth (
-                $depth * 2) rgba(163, 177, 198, 0.45),
-                inset (-$depth) (-$depth) ($depth * 2) rgba(255, 255, 255, 0.9
-        );
+  box-shadow:
+    inset $depth $depth ($depth * 2) rgba(163, 177, 198, 0.45),
+    inset (-$depth) (-$depth) ($depth * 2) rgba(255, 255, 255, 0.9);
 }
 
 @mixin neu-button() {
-        background: var(--bg-primary);
-        box-shadow:
-                6px 6px 12px var(--shadow-dark),
-                -6px -6px 12px var(--shadow-light);
+  background: var(--bg-primary);
+  box-shadow:
+    6px 6px 12px var(--shadow-dark),
+    -6px -6px 12px var(--shadow-light);
 
-        transition: box-shadow 150ms ease-in-out, transform 100ms ease-in-out;
-        border: none;
+  transition:
+    box-shadow 150ms ease-in-out,
+    transform 100ms ease-in-out;
+  border: none;
 }
 
 @mixin neu-button-hover() {
-        transform: scale(0.85);
-        box-shadow:
-                8px 8px 16px rgba(163, 177, 198, 0.7),
-                -8px -8px 16px rgba(255, 255, 255, 1);
-
+  transform: scale(0.85);
+  box-shadow:
+    8px 8px 16px var(--shadow-dark-hover),
+    -8px -8px 16px var(--shadow-light-hover);
 }
 
 @mixin neu-button-active() {
-        box-shadow:
-                inset 4px 4px 8px rgba(163, 177, 198, 0.6),
-                inset -4px -4px 8px rgba(255, 255, 255, 0.9);
-
+  box-shadow:
+    inset 4px 4px 8px var(--shadow-dark-active),
+    inset -4px -4px 8px var(--shadow-light-active);
 }
