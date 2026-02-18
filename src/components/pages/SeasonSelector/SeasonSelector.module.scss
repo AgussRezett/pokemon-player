@@ -45,7 +45,7 @@
   border-radius: 20px;
 
   &:hover {
-    @include neu.neu-pressed(#ecf1f6);
+    @include neu.neu-pressed();
   }
 }
 
@@ -103,7 +103,7 @@
 }
 
 .progressBar {
-  @include neu.neu-pressed(#ecf1f6);
+  @include neu.neu-pressed(14px);
   height: 8px;
   border-radius: 10px;
   overflow: hidden;
@@ -133,7 +133,7 @@
 }
 
 .stat {
-  @include neu.neu-inset(#ecf1f6, 16px, 2px);
+  @include neu.neu-inset(16px, 2px);
   padding: 1rem;
   border-radius: 12px;
   text-align: center;

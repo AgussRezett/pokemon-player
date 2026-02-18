@@ -8,8 +8,8 @@
   --bg-light: #{color.adjust($bg-base, $lightness: 3%)};
   --bg-dark: #{color.adjust($bg-base, $lightness: -2%)};
 
-  --light: rgba(255, 255, 255, 0.6);
-  --dark: rgba(163, 177, 198, 0.45);
+  --light: rgba(255, 255, 255, 0.9);
+  --dark: rgba(163, 177, 198, 0.7);
 
   --bg-glass: rgba(255, 255, 255, 0.3);
   // Gradientes de fondo
@@ -56,6 +56,9 @@
   --bg: #{$bg-base};
   --bg-light: #{color.adjust($bg-base, $lightness: 3%)};
   --bg-dark: #{color.adjust($bg-base, $lightness: -2%)};
+
+  --light: rgba(40, 40, 40, 0.6);
+  --dark: rgba(13, 13, 13, 0.35);
 
   // Gradientes de fondo
   --bg-gradient-1: #202023;

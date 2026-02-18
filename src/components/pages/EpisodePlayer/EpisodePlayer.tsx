@@ -171,7 +171,7 @@ export default function EpisodePlayer() {
 
             {watched && (
               <span className={`${styles.badge} ${styles.badgeWatched}`}>
-                ✓ Marcar como visto
+                ✓ Episodio visto
               </span>
             )}
           </div>

@@ -2,14 +2,14 @@
 
 @mixin neu-card($radius: 20px, $shadow-blur: 20px) {
   border-radius: $radius;
-
+  outline: 2px solid var(--bg-glass);
   background: linear-gradient(145deg, var(--bg-light), var(--bg-dark));
 
   box-shadow:
     5px 5px $shadow-blur var(--dark),
     -5px -5px $shadow-blur var(--light),
-    inset 1px 1px 2px rgba(255, 255, 255, 0.6),
-    inset -1px -1px 2px rgba(163, 177, 198, 0.2);
+    inset 1px 1px 2px var(--light),
+    inset -1px -1px 2px var(--dark);
 }
 
 @mixin neu-card-gradient(
@@ -23,40 +23,27 @@
   box-shadow:
     5px 5px $shadow-blur var(--dark),
     -5px -5px $shadow-blur var(--light),
-    inset 1px 1px 2px rgba(255, 255, 255, 0.6),
-    inset -1px -1px 2px rgba(163, 177, 198, 0.2);
+    inset 1px 1px 2px var(--light),
+    inset -1px -1px 2px rgbavar(--dark);
 }
 
-@mixin neu-pressed($bg, $blur: 14px) {
-  background: linear-gradient(
-    145deg,
-    color.adjust($bg, $lightness: -2%),
-    color.adjust($bg, $lightness: 2%)
-  );
+@mixin neu-pressed($blur: 14px) {
+  background: linear-gradient(145deg, var(--bg-dark), var(--bg-light));
 
   box-shadow:
-    inset 6px 6px $blur rgba(163, 177, 198, 0.4),
-    inset -6px -6px $blur rgba(255, 255, 255, 0.8);
+    inset 6px 6px $blur var(--dark),
+    inset -6px -6px $blur var(--light);
 }
 
-@mixin neu-inset(
-  $bg,
-  $radius: 16px,
-  $depth: 8px,
-  $lightness-top: -1%,
-  $lightness-bottom: 1%
-) {
+@mixin neu-inset($radius: 16px, $depth: 8px) {
   border-radius: $radius;
 
-  background: linear-gradient(
-    145deg,
-    color.adjust($bg, $lightness: $lightness-top),
-    color.adjust($bg, $lightness: $lightness-bottom)
-  );
+  // Invertimos el gradiente respecto al card
+  background: linear-gradient(145deg, var(--bg-dark), var(--bg-light));
 
   box-shadow:
-    inset $depth $depth ($depth * 2) rgba(163, 177, 198, 0.45),
-    inset (-$depth) (-$depth) ($depth * 2) rgba(255, 255, 255, 0.9);
+    inset $depth $depth ($depth * 2) var(--dark),
+    inset (-$depth) (-$depth) ($depth * 2) var(--light);
 }
 
 @mixin neu-button() {

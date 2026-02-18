@@ -28,7 +28,7 @@
   transition: all 0.2s ease;
 
   &:hover {
-    @include neu.neu-pressed(#ecf1f6);
+    @include neu.neu-pressed();
   }
 }
 
@@ -80,7 +80,7 @@
 }
 
 .statCard {
-  @include neu.neu-inset(#ecf1f6, 16px, 2px);
+  @include neu.neu-inset(16px, 2px);
   padding: 1.25rem;
   text-align: center;
   transition: transform 0.2s ease;
@@ -139,8 +139,8 @@
   overflow: hidden;
 
   box-shadow:
-    2px 2px 4px rgba(163, 177, 198, 0.4),
-    -2px -2px 4px rgba(255, 255, 255, 0.6);
+    2px 2px 4px var(--dark),
+    -2px -2px 4px var(--light);
 }
 
 .progressFill {
@@ -254,11 +254,11 @@
   }
 
   &:active {
-    @include neu.neu-inset(#ecf1f6, 16px, 2px);
+    @include neu.neu-inset(16px, 2px);
   }
 
   &.active {
-    @include neu.neu-inset(#ecf1f6, 16px, 2px);
+    @include neu.neu-inset(16px, 2px);
     color: var(--accent-primary);
     font-weight: 600;
   }
@@ -471,7 +471,7 @@
   }
 
   &:active {
-    @include neu.neu-inset(#ecf1f6, 50%, 6px);
+    @include neu.neu-inset(50%, 6px);
   }
 
   &.watched {
@@ -481,11 +481,11 @@
 }
 
 .episodeCard.watched .watchLink {
-  background: #ffffff;
+  background: var(--bg);
 
   box-shadow:
-    2px 2px 6px rgba(163, 177, 198, 0.35),
-    -2px -2px 6px rgba(255, 255, 255, 0.9);
+    2px 2px 6px var(--dark),
+    -2px -2px 6px var(--light);
 }
 
 .watchLink {
@@ -500,7 +500,7 @@
   white-space: nowrap;
 
   &:hover {
-    @include neu.neu-pressed(#ecf1f6);
+    @include neu.neu-pressed();
   }
 
   @media (max-width: 768px) {
@@ -567,6 +567,6 @@
   font-weight: 500;
 
   &:hover {
-    @include neu.neu-pressed(#ecf1f6);
+    @include neu.neu-pressed();
   }
 }
