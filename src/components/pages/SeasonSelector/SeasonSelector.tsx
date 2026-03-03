@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './SeasonSelector.module.scss';
 import { useEpisodeStore } from '../../../store/episodeStore';
+import { getSeasonColor, getSeasonName } from '../../../utils/pokemonSeasons';
 
 export default function SeasonSelector() {
   const { episodes, loading, error, fetchEpisodes, isWatched } =
@@ -30,35 +31,6 @@ export default function SeasonSelector() {
   const seasons = Object.keys(episodesBySeason)
     .map(Number)
     .sort((a, b) => a - b);
-
-  // Colores por temporada (inspirados en Pokémon)
-  const seasonColors = [
-    '#FF6B6B', // Rojo - Temporada 1
-    '#FFB84D', // Naranja - Temporada 2
-    '#FFD93D', // Amarillo - Temporada 3
-    '#6BCF7F', // Verde - Temporada 4
-    '#4ECDC4', // Cyan - Temporada 5
-    '#5271FF', // Azul - Temporada 6
-    '#9B59B6', // Morado - Temporada 7
-    '#E91E63', // Rosa - Temporada 8
-  ];
-
-  const getSeasonColor = (season: number) => {
-    return seasonColors[(season - 1) % seasonColors.length];
-  };
-
-  const getSeasonName = (season: number) => {
-    const names: Record<number, string> = {
-      1: 'Liga Índigo',
-      2: 'Las Aventuras en las Islas Naranja',
-      3: 'Liga Johto',
-      4: 'Maestros Johto',
-      5: 'Desafío Hoenn',
-      6: 'Liga Hoenn',
-      // Agrega más según sea necesario
-    };
-    return names[season] || `Temporada ${season}`;
-  };
 
   if (loading) {
     return (

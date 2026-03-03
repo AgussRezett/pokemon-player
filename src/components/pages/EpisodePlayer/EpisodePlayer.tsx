@@ -1,7 +1,8 @@
-import { useEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import styles from './EpisodePlayer.module.scss';
 import { useEpisodeStore } from '../../../store/episodeStore';
+import { getSeasonColor, getSeasonName } from '../../../utils/pokemonSeasons';
 
 export default function EpisodePlayer() {
   const { seasonNumber, episodeNumber } = useParams<{
@@ -15,7 +16,11 @@ export default function EpisodePlayer() {
     getEpisodeBySeasonAndNumber,
     markAsWatched,
     isWatched,
+    toggleWatched,
   } = useEpisodeStore();
+
+  const [showControls, setShowControls] = useState(true);
+  const hideControlsTimer = useRef<number | null>(null);
 
   const season = seasonNumber ? parseInt(seasonNumber, 10) : null;
   const episodeNum = episodeNumber ? parseInt(episodeNumber, 10) : null;
@@ -42,7 +47,7 @@ export default function EpisodePlayer() {
         )
         .join(' ');
 
-      document.title = `Temporada ${episode.season} Episodio ${episode.episode}: ${capitalizedName} | Pokémon Tracker`;
+      document.title = `${capitalizedName} · T${episode.season}E${episode.episode} | Pokémon Tracker`;
     } else {
       document.title = 'Pokémon Tracker';
     }
@@ -62,6 +67,23 @@ export default function EpisodePlayer() {
     }
   }, [episode, watched, markAsWatched]);
 
+  // Auto-hide controls
+  const handleMouseMove = () => {
+    setShowControls(true);
+
+    if (hideControlsTimer.current) {
+      clearTimeout(hideControlsTimer.current);
+    }
+
+    hideControlsTimer.current = setTimeout(() => {
+      setShowControls(false);
+    }, 3000);
+  };
+
+  const handleMouseLeave = () => {
+    setShowControls(false);
+  };
+
   // Encontrar episodios anterior y siguiente
   const seasonEpisodes = episodes.filter((ep) => ep.season === season);
   const currentIndex = episode
@@ -74,32 +96,22 @@ export default function EpisodePlayer() {
       ? seasonEpisodes[currentIndex + 1]
       : null;
 
-  // Colores por temporada
-  const seasonColors = [
-    '#FF6B6B',
-    '#FFB84D',
-    '#FFD93D',
-    '#6BCF7F',
-    '#4ECDC4',
-    '#5271FF',
-    '#9B59B6',
-    '#E91E63',
-  ];
-  const seasonColor = season
-    ? seasonColors[(season - 1) % seasonColors.length]
-    : '#5271FF';
+  const handleToggleWatched = () => {
+    if (episode) {
+      toggleWatched(episode.code);
+    }
+  };
 
-  // Nombres de temporadas
-  const getSeasonName = (season: number) => {
-    const names: Record<number, string> = {
-      1: 'Liga Índigo',
-      2: 'Las Aventuras en las Islas Naranja',
-      3: 'Liga Johto',
-      4: 'Maestros Johto',
-      5: 'Desafío Hoenn',
-      6: 'Liga Hoenn',
-    };
-    return names[season] || `Temporada ${season}`;
+  const goToNext = () => {
+    if (nextEpisode) {
+      navigate(`/season/${season}/episode/${nextEpisode.episode}`);
+    }
+  };
+
+  const goToPrevious = () => {
+    if (previousEpisode) {
+      navigate(`/season/${season}/episode/${previousEpisode.episode}`);
+    }
   };
 
   if (episodes.length === 0) {
@@ -131,121 +143,117 @@ export default function EpisodePlayer() {
   const embedUrl = episode.url;
 
   return (
-    <div className={styles.container}>
-      {/* Breadcrumb / Volver */}
-      <div className={styles.breadcrumb}>
-        <Link to={`/season/${season}`} className={styles.backLink}>
-          ← Volver a Temporada {season}
-        </Link>
-      </div>
-
-      {/* Card principal del episodio */}
+    <div className={styles.fullscreenPlayer}>
+      {/* Controles superiores */}
       <div
-        className={styles.episodeCard}
-        style={{ '--season-color': seasonColor } as React.CSSProperties}
+        className={`${styles.topControls} ${showControls ? styles.visible : ''}`}
+        onMouseMove={handleMouseMove}
       >
-        {/* Header del episodio */}
-        <div className={styles.episodeHeader}>
-          <div className={styles.episodeInfo}>
-            <span className={styles.seasonBadge}>
-              Temporada {episode.season} · {getSeasonName(episode.season)}
-            </span>
-            <h1 className={styles.episodeTitle}>Episodio {episode.episode}</h1>
-          </div>
-
-          {/* Badges de estado */}
-          <div className={styles.badges}>
-            <span
-              className={`${styles.badge} ${episode.isCanon ? styles.badgeCanon : styles.badgeFiller}`}
-            >
-              {episode.isCanon
-                ? '⚡ Episodio de Historia'
-                : '🔄 Episodio de Relleno'}
-            </span>
-
-            {episode.isCensored && (
-              <span className={`${styles.badge} ${styles.badgeCensored}`}>
-                🚫 Censurado
-              </span>
-            )}
-
-            {watched && (
-              <span className={`${styles.badge} ${styles.badgeWatched}`}>
-                ✓ Episodio visto
-              </span>
-            )}
-          </div>
+        <div className={styles.topLeft}>
+          <Link to={`/season/${season}`} className={styles.backButton}>
+            <span className={styles.backIcon}>←</span>
+            <span className={styles.backText}>Temporada {season}</span>
+          </Link>
         </div>
 
-        {/* Reproductor de video */}
-        <div className={styles.videoWrapper}>
-          <div className={styles.videoContainer}>
-            <iframe
-              src={embedUrl}
-              allowFullScreen
-              title={`${episode.season}x${episode.episode} - ${episode.name}`}
-            />
-          </div>
-        </div>
-
-        {/* Información del episodio */}
-        <div className={styles.episodeDetails}>
-          <div className={styles.episodeMeta}>
-            <h2 className={styles.episodeName}>{episode.name}</h2>
-            <p className={styles.episodeCode}>Código: {episode.code}</p>
-          </div>
+        <div className={styles.topRight}>
+          <button
+            onClick={handleToggleWatched}
+            className={`${styles.watchedButton} ${watched ? styles.active : ''}`}
+            title={watched ? 'Marcar como no visto' : 'Marcar como visto'}
+          >
+            {watched ? '✓' : '○'}
+          </button>
         </div>
       </div>
 
-      {/* Navegación entre episodios */}
-      <div className={styles.navigation}>
-        <button
-          onClick={() =>
-            previousEpisode &&
-            navigate(`/season/${season}/episode/${previousEpisode.episode}`)
-          }
-          disabled={!previousEpisode}
-          className={`${styles.navButton} ${styles.navPrev}`}
-        >
-          <div className={styles.navIcon}>←</div>
-          {previousEpisode ? (
-            <div className={styles.navContent}>
-              <span className={styles.navLabel}>Episodio Anterior</span>
-              <span className={styles.navTitle}>
-                Episodio {previousEpisode.episode}: {previousEpisode.name}
-              </span>
-            </div>
-          ) : (
-            <div className={styles.navContent}>
-              <span className={styles.navLabel}>No hay episodio anterior</span>
-            </div>
-          )}
-        </button>
+      {/* Video container */}
+      <div
+        className={styles.videoWrapper}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+      >
+        <iframe
+          src={embedUrl}
+          allowFullScreen
+          title={`${episode.season}x${episode.episode} - ${episode.name}`}
+        />
+      </div>
 
-        <div className={styles.navDivider}></div>
+      {/* Controles inferiores */}
+      <div
+        className={`${styles.bottomControls} ${showControls ? styles.visible : ''}`}
+        onMouseMove={handleMouseMove}
+      >
+        {/* Info del episodio */}
+        <div className={styles.episodeInfo}>
+          <div className={styles.episodeMetadata}>
+            <span
+              className={styles.seasonLabel}
+              style={{ color: getSeasonColor(episode.season) }}
+            >
+              T{episode.season} · E{episode.episode}
+            </span>
+            <h1 className={styles.episodeTitle}>{episode.name}</h1>
+            <div className={styles.episodeDetails}>
+              <span>{getSeasonName(episode.season)}</span>
+              <span className={styles.dot}>·</span>
+              <span>Ep. absoluto #{episode.absoluteEpisode}</span>
+              {episode.isCanon ? (
+                <>
+                  <span className={styles.dot}>·</span>
+                  <span className={styles.badgeInline}>📖 Historia</span>
+                </>
+              ) : (
+                <>
+                  <span className={styles.dot}>·</span>
+                  <span className={styles.badgeInline}>🔄 Relleno</span>
+                </>
+              )}
+              {episode.isCensored && (
+                <>
+                  <span className={styles.dot}>·</span>
+                  <span className={styles.badgeInline}>🚫 Censurado</span>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
 
-        <button
-          onClick={() =>
-            nextEpisode &&
-            navigate(`/season/${season}/episode/${nextEpisode.episode}`)
-          }
-          disabled={!nextEpisode}
-          className={`${styles.navButton} ${styles.navNext}`}
-        >
-          {nextEpisode ? (
-            <div className={styles.navContent}>
-              <span className={styles.navLabel}>Siguiente Episodio</span>
-              <span className={styles.navTitle}>
-                Episodio {nextEpisode.episode}: {nextEpisode.name}
-              </span>
+        {/* Navegación entre episodios */}
+        <div className={styles.navigation}>
+          <button
+            onClick={goToPrevious}
+            disabled={!previousEpisode}
+            className={styles.navButton}
+          >
+            <span className={styles.navIcon}>⏮</span>
+            <div className={styles.navInfo}>
+              <span className={styles.navLabel}>Anterior</span>
+              {previousEpisode && (
+                <span className={styles.navEpisode}>
+                  E{previousEpisode.episode}
+                </span>
+              )}
             </div>
-          ) : (
-            <div className={styles.navContent}>
-              <span className={styles.navLabel}>No hay siguiente episodio</span>
+          </button>
+
+          <button
+            onClick={goToNext}
+            disabled={!nextEpisode}
+            className={styles.navButton}
+          >
+            <div className={styles.navInfo}>
+              <span className={styles.navLabel}>Siguiente</span>
+              {nextEpisode && (
+                <span className={styles.navEpisode}>
+                  E{nextEpisode.episode}
+                </span>
+              )}
             </div>
-          )}
-          <div className={styles.navIcon}>→</div>
-        </button>
+            <span className={styles.navIcon}>⏭</span>
+          </button>
+        </div>
       </div>
     </div>
   );

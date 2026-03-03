@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import styles from './SeasonDetail.module.scss';
 import { useEpisodeStore } from '../../../store/episodeStore';
+import { getSeasonColor, getSeasonName } from '../../../utils/pokemonSeasons';
 
 export default function SeasonDetail() {
   const { seasonNumber } = useParams<{ seasonNumber: string }>();
@@ -59,32 +60,6 @@ export default function SeasonDetail() {
   const canonCount = seasonEpisodes.filter((ep) => ep.isCanon).length;
   const fillerCount = seasonEpisodes.filter((ep) => !ep.isCanon).length;
   const progress = Math.round((watchedCount / totalEpisodes) * 100);
-
-  // Nombres de temporadas
-  const getSeasonName = (season: number) => {
-    const names: Record<number, string> = {
-      1: 'Liga Índigo',
-      2: 'Las Aventuras en las Islas Naranja',
-      3: 'Liga Johto',
-      4: 'Maestros Johto',
-      5: 'Desafío Hoenn',
-      6: 'Liga Hoenn',
-    };
-    return names[season] || `Temporada ${season}`;
-  };
-
-  // Colores por temporada
-  const seasonColors = [
-    '#FF6B6B',
-    '#FFB84D',
-    '#FFD93D',
-    '#6BCF7F',
-    '#4ECDC4',
-    '#5271FF',
-    '#9B59B6',
-    '#E91E63',
-  ];
-  const seasonColor = seasonColors[(season - 1) % seasonColors.length];
 
   // Funciones de toggle para filtros tipo checkbox
   const toggleFilterWatched = (filter: 'watched' | 'unwatched') => {
@@ -155,7 +130,9 @@ export default function SeasonDetail() {
       {/* Card de información de temporada */}
       <div
         className={styles.seasonCard}
-        style={{ '--season-color': seasonColor } as React.CSSProperties}
+        style={
+          { '--season-color': getSeasonColor(season) } as React.CSSProperties
+        }
       >
         <div className={styles.seasonHeader}>
           <div>
@@ -200,7 +177,7 @@ export default function SeasonDetail() {
               className={styles.progressFill}
               style={{
                 width: `${progress}%`,
-                background: seasonColor,
+                background: getSeasonColor(season),
               }}
             />
           </div>
@@ -317,7 +294,7 @@ export default function SeasonDetail() {
                   {/* Número del episodio en círculo */}
                   <div
                     className={styles.episodeNumber}
-                    style={{ background: seasonColor }}
+                    style={{ background: getSeasonColor(season) }}
                   >
                     {episode.absoluteEpisode}
                   </div>
