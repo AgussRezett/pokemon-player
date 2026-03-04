@@ -3,12 +3,6 @@
 
 .container {
   padding: 0;
-  max-width: 1200px;
-  margin: 0 auto;
-
-  @media (max-width: 768px) {
-    padding: 1rem 0;
-  }
 }
 
 .backNav {
@@ -346,7 +340,6 @@
   font-weight: 700;
   color: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  outline: solid 4px #ffffff;
 
   outline: 2px solid var(--bg-glass);
   @include neu.neu-card(9px, 22px);
@@ -459,11 +452,9 @@
   white-space: nowrap;
 
   @include neu.neu-card();
-  background: linear-gradient(
-    360deg,
-    var(--color-primary),
-    var(--color-secondary)
-  );
+  background: linear-gradient(360deg,
+      var(--color-primary),
+      var(--color-secondary));
   color: #2c3e50;
   transition: all 500ms ease;
 

@@ -2,7 +2,13 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './SeasonSelector.module.scss';
 import { useEpisodeStore } from '../../../store/episodeStore';
-import { getSeasonColor, getSeasonName } from '../../../utils/pokemonSeasons';
+import {
+  getSeasonColor,
+  getSeasonName,
+  seasonPokemon,
+} from '../../../utils/pokemonSeasons';
+
+// Configuración de Pokémon por temporada
 
 export default function SeasonSelector() {
   const { episodes, loading, error, fetchEpisodes, isWatched } =
@@ -16,7 +22,6 @@ export default function SeasonSelector() {
     document.title = 'Temporadas de Pokémon | Pokémon Tracker';
   }, []);
 
-  // Agrupar por temporada
   const episodesBySeason = episodes.reduce(
     (acc, episode) => {
       if (!acc[episode.season]) {
@@ -52,11 +57,6 @@ export default function SeasonSelector() {
 
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-        <h1>Temporadas de Pokémon</h1>
-        <p>Selecciona una temporada para comenzar tu aventura</p>
-      </header>
-
       <div className={styles.seasonsGrid}>
         {seasons.map((season) => {
           const seasonEpisodes = episodesBySeason[season];
@@ -66,6 +66,7 @@ export default function SeasonSelector() {
           ).length;
           const fillerCount = seasonEpisodes.filter((ep) => !ep.isCanon).length;
           const progress = Math.round((watchedCount / totalEpisodes) * 100);
+          const pokemons = seasonPokemon[season] || [];
 
           return (
             <Link
@@ -78,6 +79,7 @@ export default function SeasonSelector() {
                 } as React.CSSProperties
               }
             >
+              {/* Header con color de temporada */}
               <div
                 className={styles.seasonHeader}
                 style={{ background: getSeasonColor(season) }}
@@ -85,11 +87,40 @@ export default function SeasonSelector() {
                 <h2>Temporada {season}</h2>
               </div>
 
+              {/* Body con Pokémon */}
               <div className={styles.seasonBody}>
-                <h3>{getSeasonName(season)}</h3>
+                <h3 className={styles.seasonName}>{getSeasonName(season)}</h3>
 
+                {/* Pokémon Stickers */}
+                {pokemons.length > 0 && (
+                  <div className={styles.pokemonStickers}>
+                    {pokemons.map((pokemon, index) => (
+                      <div
+                        key={pokemon.name}
+                        className={styles.stickerWrapper}
+                        style={
+                          {
+                            '--sticker-delay': `${index * 0.1}s`,
+                            '--sticker-rotation': `${(index - 1) * 8}deg`,
+                          } as React.CSSProperties
+                        }
+                      >
+                        <img
+                          src={pokemon.img}
+                          alt={pokemon.name}
+                          className={styles.pokemonSticker}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Progress */}
                 <div className={styles.progressSection}>
-                  <span className={styles.progressLabel}>Progreso</span>
+                  <div className={styles.progressHeader}>
+                    <span className={styles.progressLabel}>Progreso</span>
+                    <span className={styles.progressPercent}>{progress}%</span>
+                  </div>
                   <div className={styles.progressBar}>
                     <div
                       className={styles.progressFill}
@@ -99,9 +130,9 @@ export default function SeasonSelector() {
                       }}
                     />
                   </div>
-                  <span className={styles.progressText}>{progress}%</span>
                 </div>
 
+                {/* Stats */}
                 <div className={styles.stats}>
                   <div className={styles.stat}>
                     <span className={styles.statLabel}>Episodios</span>
