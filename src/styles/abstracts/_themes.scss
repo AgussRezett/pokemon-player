@@ -57,8 +57,8 @@
   --bg-light: #{color.adjust($bg-base, $lightness: 3%)};
   --bg-dark: #{color.adjust($bg-base, $lightness: -2%)};
 
-  --light: rgba(40, 40, 40, 0.6);
-  --dark: rgba(13, 13, 13, 0.35);
+  --light: #28282899;
+  --dark: #0d0d0d59;
 
   --bg-glass: rgba(26, 26, 26, 0.3);
   // Gradientes de fondo

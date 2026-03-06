@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import styles from './EpisodePlayer.module.scss';
 import { useEpisodeStore } from '../../../store/episodeStore';
@@ -20,7 +20,6 @@ export default function EpisodePlayer() {
   } = useEpisodeStore();
 
   const [showControls, setShowControls] = useState(true);
-  const hideControlsTimer = useRef<number | null>(null);
 
   const season = seasonNumber ? parseInt(seasonNumber, 10) : null;
   const episodeNum = episodeNumber ? parseInt(episodeNumber, 10) : null;
@@ -67,24 +66,6 @@ export default function EpisodePlayer() {
     }
   }, [episode, watched, markAsWatched]);
 
-  // Auto-hide controls
-  const handleMouseMove = () => {
-    setShowControls(true);
-
-    if (hideControlsTimer.current) {
-      clearTimeout(hideControlsTimer.current);
-    }
-
-    hideControlsTimer.current = setTimeout(() => {
-      setShowControls(false);
-    }, 3000);
-  };
-
-  const handleMouseLeave = () => {
-    setShowControls(false);
-  };
-
-  // Encontrar episodios anterior y siguiente
   const seasonEpisodes = episodes.filter((ep) => ep.season === season);
   const currentIndex = episode
     ? seasonEpisodes.findIndex((ep) => ep.code === episode.code)
@@ -112,6 +93,10 @@ export default function EpisodePlayer() {
     if (previousEpisode) {
       navigate(`/season/${season}/episode/${previousEpisode.episode}`);
     }
+  };
+
+  const toggleControls = () => {
+    setShowControls((prev) => !prev);
   };
 
   if (episodes.length === 0) {
@@ -147,7 +132,6 @@ export default function EpisodePlayer() {
       {/* Controles superiores */}
       <div
         className={`${styles.topControls} ${showControls ? styles.visible : ''}`}
-        onMouseMove={handleMouseMove}
       >
         <div className={styles.topLeft}>
           <Link to={`/season/${season}`} className={styles.backButton}>
@@ -167,12 +151,20 @@ export default function EpisodePlayer() {
         </div>
       </div>
 
-      {/* Video container */}
-      <div
-        className={styles.videoWrapper}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-      >
+      {/* Switch neumórfico siempre visible */}
+      <div className={styles.toggleSwitchContainer}>
+        <div
+          className={`${styles.toggleSwitch} ${showControls ? styles.on : styles.off}`}
+          onClick={toggleControls}
+        >
+          <div className={styles.switchTrack}>
+            <div className={styles.switchThumb}></div>
+          </div>
+        </div>
+      </div>
+
+      {/* Video container - TOTALMENTE LIBRE */}
+      <div className={styles.videoWrapper}>
         <iframe
           src={embedUrl}
           allowFullScreen
@@ -183,9 +175,7 @@ export default function EpisodePlayer() {
       {/* Controles inferiores */}
       <div
         className={`${styles.bottomControls} ${showControls ? styles.visible : ''}`}
-        onMouseMove={handleMouseMove}
       >
-        {/* Info del episodio */}
         <div className={styles.episodeInfo}>
           <div className={styles.episodeMetadata}>
             <span
@@ -220,7 +210,6 @@ export default function EpisodePlayer() {
           </div>
         </div>
 
-        {/* Navegación entre episodios */}
         <div className={styles.navigation}>
           <button
             onClick={goToPrevious}
