@@ -41,11 +41,9 @@
   justify-content: space-between;
   align-items: flex-start;
   padding: 1.5rem;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.7) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(to bottom,
+      rgba(0, 0, 0, 0.7) 0%,
+      transparent 100%);
   z-index: 10;
   opacity: 0;
   transform: translateY(-100%);
@@ -156,11 +154,9 @@
   height: 50px;
 
   border-radius: 50%;
-  background: linear-gradient(
-    145deg,
+  background: linear-gradient(145deg,
     #{color.adjust(#1e2228, $lightness: 3%)},
-    #{color.adjust(#1e2228, $lightness: -2%)}
-  );
+    #{color.adjust(#1e2228, $lightness: -2%)});
   box-shadow:
     inset 2px 2px (2px * 2) #0d0d0d59,
     inset (-2px) (-2px) (2px * 2) #28282899;
@@ -182,11 +178,9 @@
   border-radius: 26px;
   position: relative;
   padding: 4px;
-  background: linear-gradient(
-    145deg,
+  background: linear-gradient(145deg,
     #{color.adjust(#1e2228, $lightness: 3%)},
-    #{color.adjust(#1e2228, $lightness: -2%)}
-  );
+    #{color.adjust(#1e2228, $lightness: -2%)});
   box-shadow:
     inset 2px 2px (2px * 2) #0d0d0d59,
     inset (-2px) (-2px) (2px * 2) #28282899;
@@ -197,11 +191,9 @@
   height: 42px;
 
   border-radius: 50%;
-  background: linear-gradient(
-    145deg,
+  background: linear-gradient(145deg,
     #{color.adjust(#111213, $lightness: -2%)},
-    #{color.adjust(#000000, $lightness: 3%)}
-  );
+    #{color.adjust(#000000, $lightness: 3%)});
   box-shadow:
     5px 5px 6px #0d0d0d59,
     -5px -5px 6px #28282899,
