@@ -9,10 +9,12 @@ import {
 } from '../../../utils/pokemonSeasons';
 import PageTransition from '../../PageTransition/PageTransition';
 import { LockKeyIcon, StarIcon } from '@phosphor-icons/react';
+import { useSounds } from '../../../hooks/useSounds';
 
 export default function SeasonSelector() {
   const { episodes, loading, error, fetchEpisodes, isWatched } =
     useEpisodeStore();
+  const { play } = useSounds();
 
   useEffect(() => {
     fetchEpisodes();
@@ -88,6 +90,7 @@ export default function SeasonSelector() {
                     '--season-color': getSeasonColor(season),
                   } as React.CSSProperties
                 }
+                onClick={() => play('select')}
               >
                 {/* Header con color de temporada */}
                 <div
@@ -129,7 +132,9 @@ export default function SeasonSelector() {
                               className={styles.pokemonSticker}
                             />
                             {!isUnlocked && (
-                              <div className={styles.lockIcon}><LockKeyIcon size={14} weight="fill" /></div>
+                              <div className={styles.lockIcon}>
+                                <LockKeyIcon size={14} weight="fill" />
+                              </div>
                             )}
                           </div>
                         );
@@ -189,7 +194,15 @@ export default function SeasonSelector() {
                           >
                             <div className={styles.markerLine} />
                             <div className={styles.markerIcon}>
-                              {isUnlocked ? <StarIcon size={12} weight="fill" color='yellow' /> : <LockKeyIcon size={12} weight="fill" />}
+                              {isUnlocked ? (
+                                <StarIcon
+                                  size={12}
+                                  weight="fill"
+                                  color="yellow"
+                                />
+                              ) : (
+                                <LockKeyIcon size={12} weight="fill" />
+                              )}
                             </div>
                           </div>
                         );

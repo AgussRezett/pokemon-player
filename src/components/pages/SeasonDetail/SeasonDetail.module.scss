@@ -227,8 +227,6 @@
     color: var(--accent-primary);
     font-weight: 600;
   }
-
-
 }
 
 .checkmark {
@@ -453,7 +451,7 @@
   }
 }
 
-.episodeCard.watched .watchContainer>.watchLink {
+.episodeCard.watched .watchContainer > .watchLink {
   @include neu.neu-card();
   color: var(--text-primary);
 
@@ -476,9 +474,11 @@
   white-space: nowrap;
 
   @include neu.neu-card();
-  background: linear-gradient(360deg,
-      var(--color-primary),
-      var(--color-secondary));
+  background: linear-gradient(
+    360deg,
+    var(--color-primary),
+    var(--color-secondary)
+  );
   color: #2c3e50;
   transition: all 500ms ease;
 
@@ -645,7 +645,6 @@
 }
 
 @keyframes pulse {
-
   0%,
   100% {
     opacity: 0.3;
@@ -657,7 +656,6 @@
 }
 
 @keyframes lockBounce {
-
   0%,
   100% {
     transform: translateY(0);
@@ -756,7 +754,6 @@
 }
 
 @keyframes sparkle {
-
   0%,
   100% {
     box-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
@@ -816,7 +813,6 @@
 }
 
 @keyframes shimmerBadge {
-
   0%,
   100% {
     box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
@@ -959,6 +955,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 0.5rem;
   @include neu.neu-button();
   padding: 1rem 3rem;
   font-size: 1.25rem;
@@ -1004,7 +1001,6 @@
 }
 
 @keyframes sparkleStars {
-
   0%,
   100% {
     transform: scale(1);
@@ -1016,7 +1012,6 @@
 }
 
 @keyframes twinkleStar {
-
   0%,
   100% {
     opacity: 1;
@@ -1030,7 +1025,6 @@
 }
 
 @keyframes floatPokemon {
-
   0%,
   100% {
     transform: translateY(0);

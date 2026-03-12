@@ -4,7 +4,17 @@ import styles from './EpisodePlayer.module.scss';
 import { useEpisodeStore } from '../../../store/episodeStore';
 import { getSeasonColor, getSeasonName } from '../../../utils/pokemonSeasons';
 import PlayerTransition from '../../PageTransition/PlayerTransition';
-import { ArrowCircleLeftIcon, BookOpenTextIcon, CheckIcon, CircleIcon, ProhibitIcon, RepeatIcon, SkipBackIcon, SkipForwardIcon } from '@phosphor-icons/react';
+import {
+  ArrowCircleLeftIcon,
+  BookOpenTextIcon,
+  CheckIcon,
+  CircleIcon,
+  ProhibitIcon,
+  RepeatIcon,
+  SkipBackIcon,
+  SkipForwardIcon,
+} from '@phosphor-icons/react';
+import { useSounds } from '../../../hooks/useSounds';
 
 export default function EpisodePlayer() {
   const { seasonNumber, episodeNumber } = useParams<{
@@ -20,6 +30,7 @@ export default function EpisodePlayer() {
     isWatched,
     toggleWatched,
   } = useEpisodeStore();
+  const { play } = useSounds();
 
   const [showControls, setShowControls] = useState(true);
 
@@ -149,7 +160,11 @@ export default function EpisodePlayer() {
         className={`${styles.topControls} ${showControls ? styles.visible : ''}`}
       >
         <div className={styles.topLeft}>
-          <Link to={`/season/${season}`} className={styles.backButton}>
+          <Link
+            to={`/season/${season}`}
+            className={styles.backButton}
+            onClick={() => play('back')}
+          >
             <ArrowCircleLeftIcon size={32} weight="duotone" />
             <span className={styles.backText}>Temporada {season}</span>
           </Link>
@@ -161,7 +176,11 @@ export default function EpisodePlayer() {
             className={`${styles.watchedButton} ${watched ? styles.active : ''}`}
             title={watched ? 'Marcar como no visto' : 'Marcar como visto'}
           >
-            {watched ? <CheckIcon size={24} weight="bold" /> : <CircleIcon size={24} />}
+            {watched ? (
+              <CheckIcon size={24} weight="bold" />
+            ) : (
+              <CircleIcon size={24} />
+            )}
           </button>
         </div>
       </div>
@@ -207,18 +226,24 @@ export default function EpisodePlayer() {
               {episode.isCanon ? (
                 <>
                   <span className={styles.dot}>·</span>
-                  <span className={styles.badgeInline}><BookOpenTextIcon size={14} weight='fill' /> Historia</span>
+                  <span className={styles.badgeInline}>
+                    <BookOpenTextIcon size={14} weight="fill" /> Historia
+                  </span>
                 </>
               ) : (
                 <>
                   <span className={styles.dot}>·</span>
-                  <span className={styles.badgeInline}><RepeatIcon size={14} weight="fill" /> Relleno</span>
+                  <span className={styles.badgeInline}>
+                    <RepeatIcon size={14} weight="fill" /> Relleno
+                  </span>
                 </>
               )}
               {episode.isCensored && (
                 <>
                   <span className={styles.dot}>·</span>
-                  <span className={styles.badgeInline}><ProhibitIcon size={14} weight="fill" /> Censurado</span>
+                  <span className={styles.badgeInline}>
+                    <ProhibitIcon size={14} weight="fill" /> Censurado
+                  </span>
                 </>
               )}
             </div>
@@ -231,7 +256,9 @@ export default function EpisodePlayer() {
             disabled={!previousEpisode}
             className={styles.navButton}
           >
-            <span className={styles.navIcon}><SkipBackIcon size={24} weight="fill" /></span>
+            <span className={styles.navIcon}>
+              <SkipBackIcon size={24} weight="fill" />
+            </span>
             <div className={styles.navInfo}>
               <span className={styles.navLabel}>Anterior</span>
               {previousEpisode && (
@@ -255,7 +282,9 @@ export default function EpisodePlayer() {
                 </span>
               )}
             </div>
-            <span className={styles.navIcon}><SkipForwardIcon size={24} weight="fill" /></span>
+            <span className={styles.navIcon}>
+              <SkipForwardIcon size={24} weight="fill" />
+            </span>
           </button>
         </div>
       </div>

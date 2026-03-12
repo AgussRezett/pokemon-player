@@ -106,17 +106,17 @@ const parseEpisodeUrl = (
 
 const cleanName = (name: string): string => {
   const parsedName = name
-  .replace(/^[_\-\s]+/, '')
-  .replace(/[_\-\s]+$/, '')
-  .replace(/[_]+/g, ' ')
-  .replace(/[-]+/g, ' ')
-  .replace(/\s+/g, ' ')
+    .replace(/^[_\-\s]+/, '')
+    .replace(/[_\-\s]+$/, '')
+    .replace(/[_]+/g, ' ')
+    .replace(/[-]+/g, ' ')
+    .replace(/\s+/g, ' ')
     .replace('realesrgan', '')
     .replace(/\s*!\s*/g, '!')
     .replace(/\s*\?\s*/g, '?')
     .trim()
     .toLocaleLowerCase();
-    return parsedName.charAt(0).toUpperCase() + parsedName.slice(1).toLowerCase();
+  return parsedName.charAt(0).toUpperCase() + parsedName.slice(1).toLowerCase();
 };
 
 const loadWatchedEpisodes = (): Set<string> => {

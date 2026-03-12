@@ -9,7 +9,19 @@ import {
 } from '../../../utils/pokemonSeasons';
 import Pokeball from '../../Pokeball/Pokeball';
 import PageTransition from '../../PageTransition/PageTransition';
-import { BookOpenTextIcon, CheckIcon, CircleIcon, LightningIcon, LockKeyIcon, PlayIcon, ProhibitIcon, RepeatIcon, StarIcon, XIcon } from '@phosphor-icons/react';
+import {
+  BookOpenTextIcon,
+  CheckIcon,
+  CircleIcon,
+  LightningIcon,
+  LockKeyIcon,
+  PlayIcon,
+  ProhibitIcon,
+  RepeatIcon,
+  StarIcon,
+  XIcon,
+} from '@phosphor-icons/react';
+import { useSounds } from '../../../hooks/useSounds';
 
 interface CapturedPokemon {
   name: string;
@@ -21,6 +33,7 @@ export default function SeasonDetail() {
   const { seasonNumber } = useParams<{ seasonNumber: string }>();
   const { episodes, loading, fetchEpisodes, isWatched, toggleWatched } =
     useEpisodeStore();
+  const { play } = useSounds();
 
   const [filterWatched, setFilterWatched] = useState<
     ('watched' | 'unwatched')[]
@@ -133,12 +146,14 @@ export default function SeasonDetail() {
 
     // Solo mostrar captura si estamos MARCANDO como visto (no desmarcando)
     if (!wasWatched) {
+      play('claim');
       // Verificar si este episodio es debut de algún Pokémon
       const debutPokemon = pokemons.find(
         (p) => p.debutEpisode === episode.absoluteEpisode
       );
 
       if (debutPokemon) {
+        play('unlock');
         // Mostrar modal de captura
         setCapturedPokemon({
           name: debutPokemon.name,
@@ -146,12 +161,15 @@ export default function SeasonDetail() {
           debutEpisode: debutPokemon.debutEpisode,
         });
       }
+    } else {
+      play('back');
     }
 
     toggleWatched(code);
   };
 
   const handleCapturePokemon = () => {
+    play('claim');
     setShowCaptureAnimation(true);
 
     // Después de la animación, cerrar el modal
@@ -172,7 +190,7 @@ export default function SeasonDetail() {
     <PageTransition>
       <div className={styles.container}>
         <div className={styles.backNav}>
-          <Link to="/" className={styles.backLink}>
+          <Link to="/" className={styles.backLink} onClick={() => play('back')}>
             <XIcon size={16} weight="bold" /> Volver a Temporadas
           </Link>
         </div>
@@ -215,7 +233,11 @@ export default function SeasonDetail() {
                         alt={isUnlocked ? pokemon.name : '???'}
                         className={styles.pokemonSticker}
                       />
-                      {!isUnlocked && <div className={styles.lockIcon}><LockKeyIcon size={14} weight="fill" /></div>}
+                      {!isUnlocked && (
+                        <div className={styles.lockIcon}>
+                          <LockKeyIcon size={14} weight="fill" />
+                        </div>
+                      )}
                     </div>
                   );
                 })}
@@ -293,7 +315,11 @@ export default function SeasonDetail() {
                   >
                     <div className={styles.markerLine} />
                     <div className={styles.markerIcon}>
-                      {isUnlocked ? <StarIcon size={12} weight="fill" color='yellow' /> : <LockKeyIcon size={12} weight="fill" />}
+                      {isUnlocked ? (
+                        <StarIcon size={12} weight="fill" color="yellow" />
+                      ) : (
+                        <LockKeyIcon size={12} weight="fill" />
+                      )}
                     </div>
                   </div>
                 );
@@ -431,7 +457,11 @@ export default function SeasonDetail() {
                           alt={watched ? debutPokemon.name : '???'}
                           className={styles.debutSticker}
                         />
-                        {!watched && <div className={styles.debutLock}><LockKeyIcon size={14} weight="fill" /></div>}
+                        {!watched && (
+                          <div className={styles.debutLock}>
+                            <LockKeyIcon size={14} weight="fill" />
+                          </div>
+                        )}
                       </div>
                     )}
 
@@ -444,7 +474,16 @@ export default function SeasonDetail() {
                         <span
                           className={`${styles.badge} ${episode.isCanon ? styles.badgeCanon : styles.badgeFiller}`}
                         >
-                          {episode.isCanon ? <><BookOpenTextIcon size={14} weight='fill' /> Historia</> : <><RepeatIcon size={14} weight="fill" />  Relleno</>}
+                          {episode.isCanon ? (
+                            <>
+                              <BookOpenTextIcon size={14} weight="fill" />{' '}
+                              Historia
+                            </>
+                          ) : (
+                            <>
+                              <RepeatIcon size={14} weight="fill" /> Relleno
+                            </>
+                          )}
                         </span>
 
                         {episode.isCensored && (
@@ -459,7 +498,7 @@ export default function SeasonDetail() {
                           <span
                             className={`${styles.badge} ${styles.badgeDebut}`}
                           >
-                            <StarIcon size={14} weight='fill' /> Debut
+                            <StarIcon size={14} weight="fill" /> Debut
                           </span>
                         )}
                       </div>
@@ -469,6 +508,7 @@ export default function SeasonDetail() {
                       <Link
                         to={`/season/${season}/episode/${episode.episode}`}
                         className={styles.watchLink}
+                        onClick={() => play('select')}
                       >
                         <PlayIcon size={14} weight="fill" /> Ver
                       </Link>
@@ -480,7 +520,11 @@ export default function SeasonDetail() {
                           watched ? 'Marcar como no visto' : 'Marcar como visto'
                         }
                       >
-                        {watched ? <CheckIcon size={24} weight="bold" /> : <CircleIcon size={24} />}
+                        {watched ? (
+                          <CheckIcon size={24} weight="bold" />
+                        ) : (
+                          <CircleIcon size={24} />
+                        )}
                       </button>
                     </div>
                   </div>
@@ -529,7 +573,7 @@ export default function SeasonDetail() {
                   onClick={handleCapturePokemon}
                   className={styles.captureButton}
                 >
-                  <LightningIcon size={32} weight="duotone" /> Capturar
+                  <LightningIcon size={24} weight="duotone" /> Capturar
                 </button>
               )}
             </div>
