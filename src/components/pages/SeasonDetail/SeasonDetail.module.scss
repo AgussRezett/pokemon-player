@@ -266,24 +266,6 @@
   }
 }
 
-/* .clearFiltersButton {
-  @include neu.neu-button();
-  margin-top: 1rem;
-  padding: 0.75rem 1.5rem;
-  border-radius: 12px;
-  border: none;
-  background: var(--danger-bg);
-  color: var(--danger-text);
-  font-weight: 600;
-  cursor: pointer;
-
-  &:hover {
-    @include neu.neu-button-hover();
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-} */
-
 // Contador de resultados
 .resultsCount {
   text-align: center;
@@ -329,7 +311,7 @@
 
 .episodeCard.watched .episodeNumber {
   background: #7a7a7a !important;
-  outline: 0;
+  outline: 0px solid #7a7a7a;
 }
 
 .episodeNumber {
@@ -343,10 +325,10 @@
   font-size: 1.25rem;
   font-weight: 700;
   color: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 
   outline: 2px solid var(--color-primary);
   @include neu.neu-card(9px, 22px);
+  transition: outline 25ms ease-in;
 
   @media (max-width: 768px) {
     min-width: 45px;
@@ -470,7 +452,7 @@
   text-decoration: none;
   font-weight: 600;
   font-size: 0.9rem;
-  transition: all 0.2s ease;
+  transition: all 200ms ease;
   white-space: nowrap;
 
   @include neu.neu-card();
@@ -480,14 +462,20 @@
     var(--color-secondary)
   );
   color: #2c3e50;
-  transition: all 500ms ease;
 
   &:hover {
     transform: scale(1.05);
   }
 
   &:active {
-    @include neu.neu-inset(null, 6px);
+    background: linear-gradient(
+      145deg,
+      var(--color-primary),
+      var(--color-secondary)
+    );
+    box-shadow:
+      inset 6px 6px (6px * 2) var(--dark),
+      inset (-6px) (-6px) (6px * 2) var(--light);
   }
 
   @media (max-width: 768px) {
